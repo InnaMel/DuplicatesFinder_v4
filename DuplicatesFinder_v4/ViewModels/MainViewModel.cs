@@ -11,10 +11,87 @@ using System.Windows.Input;
 
 namespace DuplicatesFinder_v4.ViewModels
 {
+    enum ExtensionsPic
+    {
+        jpg,
+        png,
+        bmp,
+        jpeg,
+        tif,
+        svg,
+        gif,
+        psd,
+        ai,
+        eps,
+        cdr,
+        raw
+    }
+
+    enum ExtensionsDocs
+    {
+        pdf,
+        doc,
+        docx,
+        rtf,
+        xls,
+        xlsx
+    }
+
+    enum ExtensionsVideo
+    {
+        mp4,
+        mov,
+        wmv,
+        flv,
+        avi,
+        mkv
+    }
+
     public class MainViewModel : INotifyPropertyChanged
     {
         public Model GetModel { get; set; }
         public DuplicatesViewModel DuplicatesViewModel { get; set; }
+        private bool? ispics;
+        public bool? isPics
+        {
+            get
+            {
+                return (ispics != null) ? ispics : true;
+            }
+            set
+            {
+                ispics = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("isPics"));
+            }
+        }
+
+        private bool? isdocs;
+        public bool? isDocs
+        {
+            get
+            {
+                return (isdocs != null) ? isdocs : true;
+            }
+            set
+            {
+                isdocs = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("isDocs"));
+            }
+        }
+
+        private bool? isvideos;
+        public bool? isVideos
+        {
+            get
+            {
+                return (isvideos != null) ? isvideos : true;
+            }
+            set
+            {
+                isvideos = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("isVideos"));
+            }
+        }
 
         public MainViewModel()
         {

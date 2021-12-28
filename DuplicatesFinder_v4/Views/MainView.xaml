@@ -59,16 +59,19 @@
                     Grid.Column="1"
                     Margin="0,10"
                     Content="pics"
+                    IsChecked="{Binding isPics}"
                     Style="{StaticResource checkBoxStyle}" />
                 <CheckBox
                     Grid.Column="2"
                     Margin="0,10"
                     Content="docs"
+                    IsChecked="{Binding isDocs}"
                     Style="{StaticResource checkBoxStyle}" />
                 <CheckBox
                     Grid.Column="3"
                     Margin="0,10"
-                    Content="video"
+                    Content="videos"
+                    IsChecked="{Binding isVideos}"
                     Style="{StaticResource checkBoxStyle}" />
             </Grid>
 
