@@ -27,8 +27,9 @@ namespace DuplicatesFinder_v4.ViewModels
         raw
     }
 
-    enum ExtensionsDocs
+    enum ExtensionsDoc
     {
+        txt,
         pdf,
         doc,
         docx,
@@ -125,7 +126,10 @@ namespace DuplicatesFinder_v4.ViewModels
             {
                 return onClick ?? (onClick = new RelayCommand((r) =>
                 {
-                    GetModel.userPath = EnteredPath;
+                    GetModel.UserPath = EnteredPath;
+                    GetModel.Pics = isPics;
+                    GetModel.Docs = isDocs;
+                    GetModel.Videos = isVideos;
                     DuplicatesViewModel.Divide(GetModel.FindDuplicates());
                 }
                 ));

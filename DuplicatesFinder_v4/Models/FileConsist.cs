@@ -11,7 +11,7 @@ namespace DuplicatesFinder_v4.Models
     {
         public string FileName { get; set; }
         public string FilePath { get; set; }
-        public string ExtentionFile { get; set; }
+        public string ExtensionFile { get; set; }
         public double SizeFile { get; set; }
         public DateTime DateTimeCreate { get; set; }
         public string DateTimeCreateString { get; set; }
@@ -23,7 +23,7 @@ namespace DuplicatesFinder_v4.Models
         {
             this.FileName = fullInfoFile.Name;
             this.FilePath = fullInfoFile.DirectoryName;
-            this.ExtentionFile = fullInfoFile.Extension;
+            this.ExtensionFile = fullInfoFile.Extension;
             this.SizeFile = (int)fullInfoFile.Length;
             this.DateTimeCreate = fullInfoFile.CreationTime;
         }

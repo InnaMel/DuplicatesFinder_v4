@@ -24,9 +24,14 @@ namespace DuplicatesFinder_v4.ViewModels
                 {
                     ListForViewDuplicates eachDuplicatesForView = new ListForViewDuplicates();
                     eachDuplicatesForView.NameDuplicates = collectionFileConsist[0].FileName;
+
                     foreach (var fileConsist in collectionFileConsist)
                     {
-                        FileConsist fileConsistMedium = new FileConsist() { FilePath = fileConsist.FilePath, DateTimeCreateString = (fileConsist.DateTimeCreate).ToString("g"), SizeFile = Math.Round((fileConsist.SizeFile / 1000000), 3), ExtentionFile = (fileConsist.ExtentionFile).Remove(0,1).ToUpper() };
+                        FileConsist fileConsistMedium = new FileConsist() { 
+                            FilePath = fileConsist.FilePath, 
+                            DateTimeCreateString = (fileConsist.DateTimeCreate).ToString("g"), 
+                            SizeFile = Math.Round((fileConsist.SizeFile / 1000000), 3), 
+                            ExtensionFile = (fileConsist.ExtensionFile).Remove(0,1).ToUpper() };
                         eachDuplicatesForView.FullInfoFiles.Add(fileConsistMedium);
                     }
                     CollectionForDuplicatesView.Add(eachDuplicatesForView);
