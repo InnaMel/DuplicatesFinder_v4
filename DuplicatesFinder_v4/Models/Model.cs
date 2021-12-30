@@ -75,15 +75,17 @@ namespace DuplicatesFinder_v4.Models
                 {
                     FileInfo fileInfo = new FileInfo(item);
 
-                    CheckMatchExtension(fileInfo.Extension, typeof(ExtensionsPic));
-                    CheckMatchExtension(fileInfo.Extension, typeof(ExtensionsDoc));
-                    CheckMatchExtension(fileInfo.Extension, typeof(ExtensionsVideo));
+                    if (Docs == true) CheckMatchExtension(fileInfo.Extension, typeof(ExtensionsDoc));
+                    if (Pics == true) CheckMatchExtension(fileInfo.Extension, typeof(ExtensionsPic));
+                    if (Videos == true) CheckMatchExtension(fileInfo.Extension, typeof(ExtensionsVideo));
 
                     if (isMatch)
                     {
                         FileConsist newSplitedFile = new FileConsist(fileInfo);
 
                         listSplitedFiles.Add(newSplitedFile);
+
+                        isMatch = false;
                     }
                 }
             }

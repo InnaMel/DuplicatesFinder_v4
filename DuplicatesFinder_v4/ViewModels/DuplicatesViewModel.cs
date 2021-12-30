@@ -19,7 +19,7 @@ namespace DuplicatesFinder_v4.ViewModels
         {
             if (wholeCollectionFileConsist != null)
             {
-                CollectionForDuplicatesView.Clear();
+                //CollectionForDuplicatesView.Clear();
                 foreach (var collectionFileConsist in wholeCollectionFileConsist)
                 {
                     ListForViewDuplicates eachDuplicatesForView = new ListForViewDuplicates();

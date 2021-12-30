@@ -33,7 +33,7 @@
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
 
-                                    <GridViewColumn Width="70" DisplayMemberBinding="{Binding ExtentionFile}">Type</GridViewColumn>
+                                    <GridViewColumn Width="70" DisplayMemberBinding="{Binding ExtensionFile}">Type</GridViewColumn>
                                     <GridViewColumn Width="70" DisplayMemberBinding="{Binding SizeFile}">Size, mb</GridViewColumn>
                                     <GridViewColumn Width="100" DisplayMemberBinding="{Binding DateTimeCreateString}">Date of creation</GridViewColumn>
                                 </GridView>

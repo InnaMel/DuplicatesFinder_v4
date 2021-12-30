@@ -126,6 +126,14 @@ namespace DuplicatesFinder_v4.ViewModels
             {
                 return onClick ?? (onClick = new RelayCommand((r) =>
                 {
+                    DuplicatesViewModel.CollectionForDuplicatesView.Clear();
+
+                    if (ispics == false && isdocs == false && isvideos == false )
+                    {
+                        MessageBox.Show("You should make the choice");
+                        return;
+                    }
+
                     GetModel.UserPath = EnteredPath;
                     GetModel.Pics = isPics;
                     GetModel.Docs = isDocs;
