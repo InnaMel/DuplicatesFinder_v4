@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DuplicatesFinder_v4.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -11,16 +12,25 @@ namespace DuplicatesFinder_v4.Models
 {
     public class Model
     {
-        public string userPath;
+        bool isMatch = false;
+        string userPath;
+        public string UserPath
+        {
+            get { return userPath; }
+            set { userPath = value; }
+        }
+        public bool? Pics { private get; set; }
+        public bool? Docs { private get; set; }
+        public bool? Videos { private get; set; }
 
         /// <summary>
-        /// creates new list of lists of duplicates
+        /// creates Observable Collection of all Observable Collections of duplicates
         /// </summary>
-        /// <param name="path"></param>
         /// <returns></returns>
         public ObservableCollection<ObservableCollection<FileConsist>> FindDuplicates()
         {
             List<FileConsist> allFiles = findAllFiles();
+
             ObservableCollection<ObservableCollection<FileConsist>> findedDuplicates = null;
 
             if (allFiles != null)
@@ -64,14 +74,40 @@ namespace DuplicatesFinder_v4.Models
                 foreach (var item in allFiles)
                 {
                     FileInfo fileInfo = new FileInfo(item);
-                    FileConsist newSplitFiles = new FileConsist(fileInfo);
-                    listSplitedFiles.Add(newSplitFiles);
+
+                    if (Docs == true) CheckMatchExtension(fileInfo.Extension, typeof(ExtensionsDoc));
+                    if (Pics == true) CheckMatchExtension(fileInfo.Extension, typeof(ExtensionsPic));
+                    if (Videos == true) CheckMatchExtension(fileInfo.Extension, typeof(ExtensionsVideo));
+
+                    if (isMatch)
+                    {
+                        FileConsist newSplitedFile = new FileConsist(fileInfo);
+
+                        listSplitedFiles.Add(newSplitedFile);
+
+                        isMatch = false;
+                    }
                 }
             }
             return listSplitedFiles;
         }
 
+        private void CheckMatchExtension(string newSplitedFile, Type enumExt)
+        {
+            if (isMatch)
+            {
+                return;
+            }
 
+            foreach (string valueEnum in Enum.GetNames(enumExt))
+            {
+                if (valueEnum == newSplitedFile.TrimStart('.'))
+                {
+                    isMatch = true;
+                    break;
+                }
+            };
+        }
 
         List<string> findFromDirectory()
         {
