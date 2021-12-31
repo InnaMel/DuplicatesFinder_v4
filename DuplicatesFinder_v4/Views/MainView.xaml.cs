@@ -52,7 +52,7 @@ namespace DuplicatesFinder_v4.Views
 
             if (e.Key == Key.Enter)
             {
-                (DataContext as MainViewModel).OnClick.Execute(null);
+                (DataContext as MainViewModel).OnClickSearch.Execute(null);
             }
         }
 
