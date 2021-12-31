@@ -65,6 +65,7 @@ namespace DuplicatesFinder_v4.ViewModels
             {
                 return onClickBrowse ?? ( onClickBrowse = new RelayCommand((r) =>
                 {
+                    EnteredPath = String.Empty;
                     using (var folderDialog = new FolderBrowserDialog())
                     {
                         DialogResult result = folderDialog.ShowDialog();
