@@ -28,13 +28,13 @@
                                         </GridViewColumn.HeaderContainerStyle>
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
-                                                <CheckBox Content="{Binding FilePath}" />
+                                                <CheckBox Content="{Binding FilePath}" IsChecked="{Binding isCheckedFile, Mode=TwoWay}" />
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
 
                                     <GridViewColumn Width="70" DisplayMemberBinding="{Binding ExtensionFile}">Type</GridViewColumn>
-                                    <GridViewColumn Width="70" DisplayMemberBinding="{Binding SizeFile}">Size, mb</GridViewColumn>
+                                    <GridViewColumn Width="{Binding RelativeSource={RelativeSource Self}, Path=PlacementTarget.ActualWidth}" DisplayMemberBinding="{Binding SizeFile}">Size, kb</GridViewColumn>
                                     <GridViewColumn Width="100" DisplayMemberBinding="{Binding DateTimeCreateString}">Date of creation</GridViewColumn>
                                 </GridView>
                             </ListView.View>

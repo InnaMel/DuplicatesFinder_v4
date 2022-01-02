@@ -1,14 +1,6 @@
 ﻿using DuplicatesFinder_v4.Models;
-using DuplicatesFinder_v4.Views;
-using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
 
@@ -133,7 +125,7 @@ namespace DuplicatesFinder_v4.ViewModels
 
                     if (ispics == false && isdocs == false && isvideos == false )
                     {
-                        MessageBox.Show("You should make the choice");
+                        System.Windows.MessageBox.Show("You should make the choice");
                         return;
                     }
 
@@ -164,6 +156,19 @@ namespace DuplicatesFinder_v4.ViewModels
                             EnteredPath = folderDialog.SelectedPath;
                         }
                     }
+                }
+                ));
+            }
+        }
+
+        private ICommand onClickExport;
+        public ICommand OnClickExport
+        {
+            get
+            { 
+                return onClickExport ?? (onClickExport = new RelayCommand((r) =>
+                {
+                    DuplicatesViewModel.SaveToTxt();
                 }
                 ));
             }
