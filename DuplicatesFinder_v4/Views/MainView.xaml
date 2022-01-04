@@ -102,7 +102,7 @@
                         VerticalAlignment="Bottom"
                         Background="#c4c4c4"
                         BorderThickness="0"
-                        Text="Enter the path below or choose it by icon folder" />
+                        Text="Enter the path below or choose it by Open button" />
                 </StackPanel>
 
                 <StackPanel

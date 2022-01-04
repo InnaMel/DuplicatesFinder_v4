@@ -119,7 +119,7 @@ namespace DuplicatesFinder_v4.ViewModels
         {
             get
             {
-                return onClickSearch ?? (onClickSearch = new RelayCommand((r) =>
+                return onClickSearch ?? (onClickSearch = new RelayCommand(async (r) =>
                 {
                     DuplicatesViewModel.CollectionForDuplicatesView.Clear();
 
@@ -133,7 +133,7 @@ namespace DuplicatesFinder_v4.ViewModels
                     GetModel.Pics = isPics;
                     GetModel.Docs = isDocs;
                     GetModel.Videos = isVideos;
-                    DuplicatesViewModel.Divide(GetModel.FindDuplicates());
+                    DuplicatesViewModel.Divide(await GetModel.FindDuplicatesAsync());
                 }
                 ));
             }

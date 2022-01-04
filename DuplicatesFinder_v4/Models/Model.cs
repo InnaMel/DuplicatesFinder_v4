@@ -27,9 +27,9 @@ namespace DuplicatesFinder_v4.Models
         /// creates Observable Collection of all Observable Collections of duplicates
         /// </summary>
         /// <returns></returns>
-        public ObservableCollection<ObservableCollection<FileConsist>> FindDuplicates()
+        public async Task<ObservableCollection<ObservableCollection<FileConsist>>> FindDuplicatesAsync()
         {
-            List<FileConsist> allFiles = findAllFiles();
+            List<FileConsist> allFiles = await findAllFiles();
 
             ObservableCollection<ObservableCollection<FileConsist>> findedDuplicates = null;
 
@@ -62,7 +62,7 @@ namespace DuplicatesFinder_v4.Models
             return findedDuplicates;
         }
 
-        List<FileConsist> findAllFiles()
+        Task<List<FileConsist>> findAllFiles()
         {
             List<string> allFiles = findFromDirectory();
             List<FileConsist> listSplitedFiles = null;
@@ -89,7 +89,7 @@ namespace DuplicatesFinder_v4.Models
                     }
                 }
             }
-            return listSplitedFiles;
+            return Task.FromResult(listSplitedFiles);
         }
 
         private void CheckMatchExtension(string newSplitedFile, Type enumExt)
