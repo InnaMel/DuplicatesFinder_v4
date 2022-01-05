@@ -31,7 +31,7 @@ namespace DuplicatesFinder_v4.Models
             this.FileName = fullInfoFile.Name;
             this.FilePath = fullInfoFile.DirectoryName;
             this.ExtensionFile = fullInfoFile.Extension.Remove(0, 1).ToUpper();
-            this.SizeFile = Math.Round(((double)fullInfoFile.Length) / 1024, MidpointRounding.AwayFromZero);
+            this.SizeFile = Math.Round(Convert.ToDouble((fullInfoFile.Length) / 1024), MidpointRounding.AwayFromZero);
             this.DateTimeCreate = fullInfoFile.CreationTime;
             this.DateTimeCreateString = fullInfoFile.CreationTime.ToString("g");
         }

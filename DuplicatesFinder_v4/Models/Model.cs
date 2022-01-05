@@ -27,42 +27,47 @@ namespace DuplicatesFinder_v4.Models
         /// creates Observable Collection of all Observable Collections of duplicates
         /// </summary>
         /// <returns></returns>
-        public async Task<ObservableCollection<ObservableCollection<FileConsist>>> FindDuplicatesAsync()
+        public Task<ObservableCollection<ObservableCollection<FileConsist>>> FindDuplicatesAsync()
         {
-            List<FileConsist> allFiles = await findAllFiles();
-
-            ObservableCollection<ObservableCollection<FileConsist>> findedDuplicates = null;
-
-            if (allFiles != null)
+            Task<ObservableCollection<ObservableCollection<FileConsist>>>  task = Task.Run<ObservableCollection<ObservableCollection<FileConsist>>>(() =>
             {
-                findedDuplicates = new ObservableCollection<ObservableCollection<FileConsist>>();
+                List<FileConsist> allFiles = findAllFiles();
 
-                for (int i = 0; i < allFiles.Count; i++)
+                ObservableCollection<ObservableCollection<FileConsist>> findedDuplicates = null;
+
+                if (allFiles != null)
                 {
-                    if (allFiles[i].isChecked == false)
+                    findedDuplicates = new ObservableCollection<ObservableCollection<FileConsist>>();
+
+                    for (int i = 0; i < allFiles.Count; i++)
                     {
-                        List<FileConsist> subsidiaryList = new List<FileConsist>();
-                        for (int j = i; j < allFiles.Count; j++)
+                        if (allFiles[i].isChecked == false)
                         {
-                            if (allFiles[j].isChecked == false && allFiles[i].FileName == allFiles[j].FileName)
+                            List<FileConsist> subsidiaryList = new List<FileConsist>();
+                            for (int j = i; j < allFiles.Count; j++)
                             {
-                                subsidiaryList.Add(allFiles[j]);
-                                allFiles[j].isChecked = true;
+                                if (allFiles[j].isChecked == false && allFiles[i].FileName == allFiles[j].FileName)
+                                {
+                                    subsidiaryList.Add(allFiles[j]);
+                                    allFiles[j].isChecked = true;
+                                }
+                            }
+                            if (subsidiaryList.Count > 1)
+                            {
+                                findedDuplicates.Add(ConvertToObservable(subsidiaryList));
                             }
                         }
-                        if (subsidiaryList.Count > 1)
-                        {
-                            findedDuplicates.Add(ConvertToObservable(subsidiaryList));
-                        }
                     }
+                    if (findedDuplicates.Count == 0)
+                        MessageBox.Show("No one matches");
                 }
-                if (findedDuplicates.Count == 0)
-                    MessageBox.Show("No one matches");
+                return findedDuplicates;
             }
-            return findedDuplicates;
+            );
+            return task;
         }
 
-        Task<List<FileConsist>> findAllFiles()
+        List<FileConsist> findAllFiles()
         {
             List<string> allFiles = findFromDirectory();
             List<FileConsist> listSplitedFiles = null;
@@ -89,7 +94,7 @@ namespace DuplicatesFinder_v4.Models
                     }
                 }
             }
-            return Task.FromResult(listSplitedFiles);
+            return listSplitedFiles;
         }
 
         private void CheckMatchExtension(string newSplitedFile, Type enumExt)
