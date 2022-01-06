@@ -67,6 +67,50 @@ namespace DuplicatesFinder_v4.Models
             return task;
         }
 
+        public void BeginFindDuplicates(Action<ObservableCollection<ObservableCollection<FileConsist>>> onCompleted)
+        {
+            Task.Run(() =>
+            {
+                ObservableCollection<ObservableCollection<FileConsist>> findedDuplicates = FindDuplicates();
+                onCompleted(findedDuplicates);
+            }
+            );
+        }
+
+        public ObservableCollection<ObservableCollection<FileConsist>> FindDuplicates()
+        {
+            List<FileConsist> allFiles = findAllFiles();
+
+            ObservableCollection<ObservableCollection<FileConsist>> findedDuplicates = null;
+
+            if (allFiles != null)
+            {
+                findedDuplicates = new ObservableCollection<ObservableCollection<FileConsist>>();
+
+                for (int i = 0; i < allFiles.Count; i++)
+                {
+                    if (allFiles[i].isChecked == false)
+                    {
+                        List<FileConsist> subsidiaryList = new List<FileConsist>();
+                        for (int j = i; j < allFiles.Count; j++)
+                        {
+                            if (allFiles[j].isChecked == false && allFiles[i].FileName == allFiles[j].FileName)
+                            {
+                                subsidiaryList.Add(allFiles[j]);
+                                allFiles[j].isChecked = true;
+                            }
+                        }
+                        if (subsidiaryList.Count > 1)
+                        {
+                            findedDuplicates.Add(ConvertToObservable(subsidiaryList));
+                        }
+                    }
+                }
+            }
+
+            return findedDuplicates;
+        }
+
         List<FileConsist> findAllFiles()
         {
             List<string> allFiles = findFromDirectory();

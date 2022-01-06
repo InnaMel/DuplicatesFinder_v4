@@ -1,8 +1,11 @@
 ﻿using DuplicatesFinder_v4.Models;
 using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace DuplicatesFinder_v4.ViewModels
 {
@@ -119,11 +122,11 @@ namespace DuplicatesFinder_v4.ViewModels
         {
             get
             {
-                return onClickSearch ?? (onClickSearch = new RelayCommand(async (r) =>
+                return onClickSearch ?? (onClickSearch = new RelayCommand((r) =>
                 {
                     DuplicatesViewModel.CollectionForDuplicatesView.Clear();
 
-                    if (ispics == false && isdocs == false && isvideos == false )
+                    if (ispics == false && isdocs == false && isvideos == false)
                     {
                         System.Windows.MessageBox.Show("You should make the choice");
                         return;
@@ -133,30 +136,62 @@ namespace DuplicatesFinder_v4.ViewModels
                     GetModel.Pics = isPics;
                     GetModel.Docs = isDocs;
                     GetModel.Videos = isVideos;
-                    DuplicatesViewModel.Divide(await GetModel.FindDuplicatesAsync());
+
+                    // RunOnMainThread(() =>
+                    //{ 
+                    //    DuplicatesViewModel.Divide(GetModel.FindDuplicatesAsync()); 
+                    //});
+
+                    GetModel.BeginFindDuplicates((list) =>
+                        {
+                            RunOnMainThread(() =>
+                            {
+                                if (list.Count == 0)
+                                    MessageBox.Show("No one matches");
+
+                                DuplicatesViewModel.Divide(list);
+                            });
+                        });
+
+                    //Task.Run(() =>
+                    //{
+                    //    ObservableCollection<ObservableCollection<FileConsist>> findedDuplicates = GetModel.FindDuplicates();
+                    //    OnResult(findedDuplicates);
+                    //});
                 }
                 ));
             }
         }
 
+        private void OnResult(ObservableCollection<ObservableCollection<FileConsist>> list)
+        {
+            RunOnMainThread(() =>
+                {
+                    if (list.Count == 0)
+                        MessageBox.Show("No one matches");
+
+                    DuplicatesViewModel.Divide(list);
+                });
+        }
+
         private ICommand onClickBrowse;
         public ICommand OnClickBrowse
         {
-            get 
+            get
             {
-                return onClickBrowse ?? ( onClickBrowse = new RelayCommand((r) =>
-                {
-                    EnteredPath = String.Empty;
-                    using (var folderDialog = new FolderBrowserDialog())
-                    {
-                        DialogResult result = folderDialog.ShowDialog();
+                return onClickBrowse ?? (onClickBrowse = new RelayCommand((r) =>
+               {
+                   EnteredPath = String.Empty;
+                   using (var folderDialog = new FolderBrowserDialog())
+                   {
+                       DialogResult result = folderDialog.ShowDialog();
 
-                        if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(folderDialog.SelectedPath))
-                        {
-                            EnteredPath = folderDialog.SelectedPath;
-                        }
-                    }
-                }
+                       if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(folderDialog.SelectedPath))
+                       {
+                           EnteredPath = folderDialog.SelectedPath;
+                       }
+                   }
+               }
                 ));
             }
         }
@@ -165,13 +200,18 @@ namespace DuplicatesFinder_v4.ViewModels
         public ICommand OnClickExport
         {
             get
-            { 
+            {
                 return onClickExport ?? (onClickExport = new RelayCommand((r) =>
                 {
                     DuplicatesViewModel.SaveToTxt();
                 }
                 ));
             }
+        }
+
+        public void RunOnMainThread(Action action)
+        {
+            System.Windows.Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, action);
         }
     }
 }
