@@ -6,6 +6,7 @@
     StartupUri="Views/MainView.xaml">
     <Application.Resources>
         <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Resources/BorderCornerRadiusSTYLE.xaml" />
                 <ResourceDictionary Source="/Resources/CirclesSTYLE.xaml" />

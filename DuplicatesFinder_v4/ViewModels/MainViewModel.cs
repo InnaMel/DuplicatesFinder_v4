@@ -51,7 +51,7 @@ namespace DuplicatesFinder_v4.ViewModels
         public Model GetModel { get; set; }
         public DuplicatesViewModel DuplicatesViewModel { get; set; }
         private bool? ispics;
-        public bool? isPics
+        public bool? IsPics
         {
             get
             {
@@ -60,12 +60,12 @@ namespace DuplicatesFinder_v4.ViewModels
             set
             {
                 ispics = value;
-                PropertyChanged(this, new PropertyChangedEventArgs("isPics"));
+                PropertyChanged(this, new PropertyChangedEventArgs("IsPics"));
             }
         }
 
         private bool? isdocs;
-        public bool? isDocs
+        public bool? IsDocs
         {
             get
             {
@@ -74,12 +74,12 @@ namespace DuplicatesFinder_v4.ViewModels
             set
             {
                 isdocs = value;
-                PropertyChanged(this, new PropertyChangedEventArgs("isDocs"));
+                PropertyChanged(this, new PropertyChangedEventArgs("IsDocs"));
             }
         }
 
         private bool? isvideos;
-        public bool? isVideos
+        public bool? IsVideos
         {
             get
             {
@@ -88,7 +88,7 @@ namespace DuplicatesFinder_v4.ViewModels
             set
             {
                 isvideos = value;
-                PropertyChanged(this, new PropertyChangedEventArgs("isVideos"));
+                PropertyChanged(this, new PropertyChangedEventArgs("IsVideos"));
             }
         }
 
@@ -133,16 +133,16 @@ namespace DuplicatesFinder_v4.ViewModels
                     }
 
                     GetModel.UserPath = EnteredPath;
-                    GetModel.Pics = isPics;
-                    GetModel.Docs = isDocs;
-                    GetModel.Videos = isVideos;
+                    GetModel.Pics = IsPics;
+                    GetModel.Docs = IsDocs;
+                    GetModel.Videos = IsVideos;
 
                     // RunOnMainThread(() =>
                     //{ 
                     //    DuplicatesViewModel.Divide(GetModel.FindDuplicatesAsync()); 
                     //});
 
-                    GetModel.BeginFindDuplicates((list) =>
+                    GetModel.BeginFindDuplicates(list =>
                         {
                             RunOnMainThread(() =>
                             {

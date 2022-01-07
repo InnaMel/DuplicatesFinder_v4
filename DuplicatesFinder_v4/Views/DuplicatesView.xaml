@@ -28,7 +28,7 @@
                                         </GridViewColumn.HeaderContainerStyle>
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
-                                                <CheckBox Content="{Binding FilePath}" IsChecked="{Binding isCheckedFile, Mode=TwoWay}" />
+                                                <CheckBox Content="{Binding FilePath}" IsChecked="{Binding IsCheckedFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>

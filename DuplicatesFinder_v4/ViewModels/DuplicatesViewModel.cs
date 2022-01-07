@@ -13,7 +13,7 @@ namespace DuplicatesFinder_v4.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
 
         private bool? ischeckedFile;
-        public bool? isCheckedFile
+        public bool? IsCheckedFile
         {
             get
             {
@@ -22,7 +22,7 @@ namespace DuplicatesFinder_v4.ViewModels
             set
             {
                 ischeckedFile = value;
-                PropertyChanged(this, new PropertyChangedEventArgs("isCheckedFile"));
+                PropertyChanged(this, new PropertyChangedEventArgs("IsCheckedFile"));
             }
         }
 
