@@ -12,6 +12,8 @@ namespace DuplicatesFinder_v4.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public string pathWithAppFolder;
+
         private bool? ischeckedFile;
         public bool? IsCheckedFile
         {
@@ -35,7 +37,6 @@ namespace DuplicatesFinder_v4.ViewModels
         {
             if (wholeCollectionFileConsist != null)
             {
-                //CollectionForDuplicatesView.Clear();
                 foreach (var collectionFileConsist in wholeCollectionFileConsist)
                 {
                     ListForViewDuplicates eachDuplicatesForView = new ListForViewDuplicates();
@@ -53,10 +54,12 @@ namespace DuplicatesFinder_v4.ViewModels
         {
             var dateCreation = DateTime.Now.ToShortDateString();
             var getCurrentNameUser = Environment.UserName;
-            var createFolder = Path.Combine($"C:\\Users\\{getCurrentNameUser}\\Downloads", "DuplicatesFinder");
+            pathWithAppFolder = Path.Combine($"C:\\Users\\{getCurrentNameUser}\\Downloads", "DuplicatesFinder");
             var setFileSaveName = $"Dublicates_{dateCreation}.txt";
-            Directory.CreateDirectory(createFolder);
-            var setFilePath = $"{createFolder}\\{setFileSaveName}";
+
+            Directory.CreateDirectory(pathWithAppFolder);
+
+            var setFilePath = $"{pathWithAppFolder}\\{setFileSaveName}";
             var option = new JsonSerializerOptions { WriteIndented = true };
 
             if (File.Exists(setFilePath))
@@ -75,7 +78,6 @@ namespace DuplicatesFinder_v4.ViewModels
                 }
                 exportFile.Close();
             }
-            MessageBox.Show("Save was successful completed! \nYou can find the file in folder Downloads\\DuplicatesFinder");
         }
     }
 }

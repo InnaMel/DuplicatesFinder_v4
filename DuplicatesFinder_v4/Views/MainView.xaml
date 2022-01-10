@@ -12,9 +12,6 @@
     Loaded="Window_Loaded"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
-    <Window.InputBindings>
-        <KeyBinding Command="{Binding Path=OnClick}" />
-    </Window.InputBindings>
 
     <Grid Margin="10,10,10,0">
         <Grid.RowDefinitions>

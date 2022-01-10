@@ -1,8 +1,9 @@
 ﻿using DuplicatesFinder_v4.Models;
 using System;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -137,21 +138,21 @@ namespace DuplicatesFinder_v4.ViewModels
                     GetModel.Docs = IsDocs;
                     GetModel.Videos = IsVideos;
 
-                    // RunOnMainThread(() =>
-                    //{ 
-                    //    DuplicatesViewModel.Divide(GetModel.FindDuplicatesAsync()); 
-                    //});
-
                     GetModel.BeginFindDuplicates(list =>
                         {
                             RunOnMainThread(() =>
                             {
                                 if (list.Count == 0)
-                                    MessageBox.Show("No one matches");
+                                    System.Windows.MessageBox.Show("No one matches");
 
                                 DuplicatesViewModel.Divide(list);
                             });
                         });
+
+                    // RunOnMainThread(() =>
+                    //{ 
+                    //    DuplicatesViewModel.Divide(GetModel.FindDuplicatesAsync()); 
+                    //});
 
                     //Task.Run(() =>
                     //{
@@ -163,16 +164,16 @@ namespace DuplicatesFinder_v4.ViewModels
             }
         }
 
-        private void OnResult(ObservableCollection<ObservableCollection<FileConsist>> list)
-        {
-            RunOnMainThread(() =>
-                {
-                    if (list.Count == 0)
-                        MessageBox.Show("No one matches");
+        //private void OnResult(ObservableCollection<ObservableCollection<FileConsist>> list)
+        //{
+        //    RunOnMainThread(() =>
+        //        {
+        //            if (list.Count == 0)
+        //                MessageBox.Show("No one matches");
 
-                    DuplicatesViewModel.Divide(list);
-                });
-        }
+        //            DuplicatesViewModel.Divide(list);
+        //        });
+        //}
 
         private ICommand onClickBrowse;
         public ICommand OnClickBrowse
@@ -203,7 +204,16 @@ namespace DuplicatesFinder_v4.ViewModels
             {
                 return onClickExport ?? (onClickExport = new RelayCommand((r) =>
                 {
-                    DuplicatesViewModel.SaveToTxt();
+                    Task.Run(() => DuplicatesViewModel.SaveToTxt());
+                    MessageBoxResult result = System.Windows.MessageBox.Show(
+                        "Save was successful completed! \nOpen containing folder ? ", 
+                        "DuplicatesFinder", 
+                        MessageBoxButton.YesNo, 
+                        MessageBoxImage.Information);
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        Process.Start(DuplicatesViewModel.pathWithAppFolder);
+                    }
                 }
                 ));
             }
