@@ -49,9 +49,24 @@ namespace DuplicatesFinder_v4.ViewModels
 
     public class MainViewModel : INotifyPropertyChanged
     {
+        private bool? ispics;
+        private bool? isdocs;
+        private bool? isvideos;
+        private string enteredPath = "your path here";
+        private ICommand onClickSearch;
+        private ICommand onClickBrowse;
+        private ICommand onClickExport;
+        private event PropertyChangedEventHandler propertyChanged;
+
+        public event PropertyChangedEventHandler PropertyChanged
+        {
+            add { propertyChanged += value; }
+            remove { propertyChanged -= value; }
+        }
+
         public Model GetModel { get; set; }
         public DuplicatesViewModel DuplicatesViewModel { get; set; }
-        private bool? ispics;
+
         public bool? IsPics
         {
             get
@@ -61,11 +76,10 @@ namespace DuplicatesFinder_v4.ViewModels
             set
             {
                 ispics = value;
-                PropertyChanged(this, new PropertyChangedEventArgs("IsPics"));
+                propertyChanged(this, new PropertyChangedEventArgs("IsPics"));
             }
         }
 
-        private bool? isdocs;
         public bool? IsDocs
         {
             get
@@ -75,11 +89,10 @@ namespace DuplicatesFinder_v4.ViewModels
             set
             {
                 isdocs = value;
-                PropertyChanged(this, new PropertyChangedEventArgs("IsDocs"));
+                propertyChanged(this, new PropertyChangedEventArgs("IsDocs"));
             }
         }
 
-        private bool? isvideos;
         public bool? IsVideos
         {
             get
@@ -89,19 +102,10 @@ namespace DuplicatesFinder_v4.ViewModels
             set
             {
                 isvideos = value;
-                PropertyChanged(this, new PropertyChangedEventArgs("IsVideos"));
+                propertyChanged(this, new PropertyChangedEventArgs("IsVideos"));
             }
         }
 
-        public MainViewModel()
-        {
-            GetModel = new Model();
-            DuplicatesViewModel = new DuplicatesViewModel();
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private string enteredPath = "your path here";
         public string EnteredPath
         {
             get { return enteredPath; }
@@ -110,15 +114,58 @@ namespace DuplicatesFinder_v4.ViewModels
                 if (enteredPath != value)
                 {
                     enteredPath = value;
-                    if (PropertyChanged != null)
+                    if (propertyChanged != null)
                     {
-                        PropertyChanged(this, new PropertyChangedEventArgs("enteredPath"));
+                        propertyChanged(this, new PropertyChangedEventArgs("enteredPath"));
                     }
                 }
             }
         }
+        
+        public ICommand OnClickBrowse
+        {
+            get
+            {
+                return onClickBrowse ?? (onClickBrowse = new RelayCommand((r) =>
+                {
+                    EnteredPath = String.Empty;
+                    using (var folderDialog = new FolderBrowserDialog())
+                    {
+                        DialogResult result = folderDialog.ShowDialog();
 
-        private ICommand onClickSearch;
+                        if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(folderDialog.SelectedPath))
+                        {
+                            EnteredPath = folderDialog.SelectedPath;
+                        }
+                    }
+                }
+                ));
+            }
+        }
+
+        public ICommand OnClickExport
+        {
+            get
+            {
+                return onClickExport ?? (onClickExport = new RelayCommand((r) =>
+                {
+                    Task.Run(() => DuplicatesViewModel.SaveToTxt());
+                     
+                    MessageBoxResult result = System.Windows.MessageBox.Show(
+                        "Save was successful completed! \nOpen containing folder ? ",
+                        "DuplicatesFinder",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Information);
+                   
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        Process.Start(DuplicatesViewModel.PathWithAppFolder);
+                    }
+                }
+                ));
+            }
+        }
+       
         public ICommand OnClickSearch
         {
             get
@@ -164,6 +211,17 @@ namespace DuplicatesFinder_v4.ViewModels
             }
         }
 
+        public MainViewModel()
+        {
+            GetModel = new Model();
+            DuplicatesViewModel = new DuplicatesViewModel();
+        }
+
+        public void RunOnMainThread(Action action)
+        {
+            System.Windows.Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, action);
+        }
+
         //private void OnResult(ObservableCollection<ObservableCollection<FileConsist>> list)
         //{
         //    RunOnMainThread(() =>
@@ -174,54 +232,5 @@ namespace DuplicatesFinder_v4.ViewModels
         //            DuplicatesViewModel.Divide(list);
         //        });
         //}
-
-        private ICommand onClickBrowse;
-        public ICommand OnClickBrowse
-        {
-            get
-            {
-                return onClickBrowse ?? (onClickBrowse = new RelayCommand((r) =>
-               {
-                   EnteredPath = String.Empty;
-                   using (var folderDialog = new FolderBrowserDialog())
-                   {
-                       DialogResult result = folderDialog.ShowDialog();
-
-                       if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(folderDialog.SelectedPath))
-                       {
-                           EnteredPath = folderDialog.SelectedPath;
-                       }
-                   }
-               }
-                ));
-            }
-        }
-
-        private ICommand onClickExport;
-        public ICommand OnClickExport
-        {
-            get
-            {
-                return onClickExport ?? (onClickExport = new RelayCommand((r) =>
-                {
-                    Task.Run(() => DuplicatesViewModel.SaveToTxt());
-                    MessageBoxResult result = System.Windows.MessageBox.Show(
-                        "Save was successful completed! \nOpen containing folder ? ", 
-                        "DuplicatesFinder", 
-                        MessageBoxButton.YesNo, 
-                        MessageBoxImage.Information);
-                    if (result == MessageBoxResult.Yes)
-                    {
-                        Process.Start(DuplicatesViewModel.pathWithAppFolder);
-                    }
-                }
-                ));
-            }
-        }
-
-        public void RunOnMainThread(Action action)
-        {
-            System.Windows.Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, action);
-        }
     }
 }

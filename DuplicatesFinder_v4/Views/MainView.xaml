@@ -49,8 +49,7 @@
                         VerticalAlignment="Center"
                         BorderThickness="0"
                         Text="Check which files you want to find (or forget about it and all will be found)"
-                        TextAlignment="Left"
-                        TextChanged="TextBox_TextChanged" />
+                        TextAlignment="Left"/>
                 </StackPanel>
                 <CheckBox
                     Grid.Column="1"

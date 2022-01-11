@@ -12,18 +12,23 @@ namespace DuplicatesFinder_v4.Models
     {
         [JsonPropertyName ("File name")]
         public string FileName { get; set; }
+
         [JsonPropertyName("File path")]
         public string FilePath { get; set; }
+        
         [JsonIgnore]
         public string ExtensionFile { get; set; }
+        
         [JsonPropertyName("File size, kb")]
         public double SizeFile { get; set; }
+        
         [JsonIgnore]
         public DateTime DateTimeCreate { get; set; }
+        
         [JsonPropertyName("File created")]
         public string DateTimeCreateString { get; set; }
 
-        public bool isChecked = false;
+        public bool IsChecked = false;
 
         public FileConsist() {}
         public FileConsist(FileInfo fullInfoFile)

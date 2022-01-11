@@ -41,8 +41,6 @@ namespace DuplicatesFinder_v4.ViewModels
 
         #region ICommand Members
 
-
-
         //[DebuggerStepThrough]
         public bool CanExecute(object parameters)
         {

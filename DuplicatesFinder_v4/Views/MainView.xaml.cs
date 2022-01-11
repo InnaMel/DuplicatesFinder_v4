@@ -21,7 +21,8 @@ namespace DuplicatesFinder_v4.Views
     /// </summary>
     public partial class MainView : Window
     {
-        bool isClean = false;
+        private bool isClean = false;
+
         public MainView()
         {
             InitializeComponent();
@@ -31,15 +32,6 @@ namespace DuplicatesFinder_v4.Views
         {
             DataContext = new MainViewModel();
             pathFromUser.Focus();
-        }
-
-        void ClearTextBox(Object j, RoutedEventArgs arg)
-        {
-            if (!isClean)
-            {
-                pathFromUser.Clear();
-                isClean = true;
-            }
         }
 
         private void Enter_KeyDown(object sender, KeyEventArgs e)
@@ -54,11 +46,6 @@ namespace DuplicatesFinder_v4.Views
             {
                 (DataContext as MainViewModel).OnClickSearch.Execute(null);
             }
-        }
-
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
         }
     }
 }
