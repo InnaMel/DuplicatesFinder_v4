@@ -12,9 +12,6 @@
     Loaded="Window_Loaded"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
-    <Window.InputBindings>
-        <KeyBinding Command="{Binding Path=OnClick}" />
-    </Window.InputBindings>
 
     <Grid Margin="10,10,10,0">
         <Grid.RowDefinitions>
@@ -52,26 +49,25 @@
                         VerticalAlignment="Center"
                         BorderThickness="0"
                         Text="Check which files you want to find (or forget about it and all will be found)"
-                        TextAlignment="Left"
-                        TextChanged="TextBox_TextChanged" />
+                        TextAlignment="Left"/>
                 </StackPanel>
                 <CheckBox
                     Grid.Column="1"
                     Margin="0,10"
                     Content="pics"
-                    IsChecked="{Binding isPics}"
+                    IsChecked="{Binding IsPics}"
                     Style="{StaticResource checkBoxStyle}" />
                 <CheckBox
                     Grid.Column="2"
                     Margin="0,10"
                     Content="docs"
-                    IsChecked="{Binding isDocs}"
+                    IsChecked="{Binding IsDocs}"
                     Style="{StaticResource checkBoxStyle}" />
                 <CheckBox
                     Grid.Column="3"
                     Margin="0,10"
                     Content="videos"
-                    IsChecked="{Binding isVideos}"
+                    IsChecked="{Binding IsVideos}"
                     Style="{StaticResource checkBoxStyle}" />
             </Grid>
 
@@ -102,7 +98,7 @@
                         VerticalAlignment="Bottom"
                         Background="#c4c4c4"
                         BorderThickness="0"
-                        Text="Enter the path below or choose it by icon folder" />
+                        Text="Enter the path below or choose it by Open button" />
                 </StackPanel>
 
                 <StackPanel
@@ -198,7 +194,7 @@
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="250" />
+                    <ColumnDefinition Width="300" />
                 </Grid.ColumnDefinitions>
                 <StackPanel
                     Height="50"
@@ -224,7 +220,8 @@
                     Grid.Row="0"
                     Grid.Column="1"
                     Margin="10,10,30,7"
-                    Content="Export to Excel | .xlsx"
+                    Command="{Binding OnClickExport}"
+                    Content="Export to .txt"
                     FontSize="16"
                     Style="{StaticResource borderCornerRadiusBlackStyle}" />
 
@@ -242,10 +239,31 @@
                             Text="!" />
                     </Grid>
                     <TextBox
-                        Margin="10,0"
+                        Margin="5,0"
                         VerticalAlignment="Top"
                         BorderThickness="0"
                         Text="All deleted files you can find in recycle bin"
+                        TextAlignment="Left" />
+                </StackPanel>
+                <StackPanel
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="10,0"
+                    Orientation="Horizontal">
+                    <Grid VerticalAlignment="Top">
+                        <Path Style="{StaticResource CircleStyle}" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Text="!" />
+                    </Grid>
+                    <TextBox
+                        Margin="5,0"
+                        VerticalAlignment="Top"
+                        BorderThickness="0"
+                        Text="Will be saved at Downloads\DuplicatesFinder"
                         TextAlignment="Left" />
                 </StackPanel>
             </Grid>

@@ -1,16 +1,12 @@
 ﻿using DuplicatesFinder_v4.Models;
-using DuplicatesFinder_v4.Views;
-using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Text;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace DuplicatesFinder_v4.ViewModels
 {
@@ -53,10 +49,25 @@ namespace DuplicatesFinder_v4.ViewModels
 
     public class MainViewModel : INotifyPropertyChanged
     {
+        private bool? ispics;
+        private bool? isdocs;
+        private bool? isvideos;
+        private string enteredPath = "your path here";
+        private ICommand onClickSearch;
+        private ICommand onClickBrowse;
+        private ICommand onClickExport;
+        private event PropertyChangedEventHandler propertyChanged;
+
+        public event PropertyChangedEventHandler PropertyChanged
+        {
+            add { propertyChanged += value; }
+            remove { propertyChanged -= value; }
+        }
+
         public Model GetModel { get; set; }
         public DuplicatesViewModel DuplicatesViewModel { get; set; }
-        private bool? ispics;
-        public bool? isPics
+
+        public bool? IsPics
         {
             get
             {
@@ -65,12 +76,11 @@ namespace DuplicatesFinder_v4.ViewModels
             set
             {
                 ispics = value;
-                PropertyChanged(this, new PropertyChangedEventArgs("isPics"));
+                propertyChanged(this, new PropertyChangedEventArgs("IsPics"));
             }
         }
 
-        private bool? isdocs;
-        public bool? isDocs
+        public bool? IsDocs
         {
             get
             {
@@ -79,12 +89,11 @@ namespace DuplicatesFinder_v4.ViewModels
             set
             {
                 isdocs = value;
-                PropertyChanged(this, new PropertyChangedEventArgs("isDocs"));
+                propertyChanged(this, new PropertyChangedEventArgs("IsDocs"));
             }
         }
 
-        private bool? isvideos;
-        public bool? isVideos
+        public bool? IsVideos
         {
             get
             {
@@ -93,19 +102,10 @@ namespace DuplicatesFinder_v4.ViewModels
             set
             {
                 isvideos = value;
-                PropertyChanged(this, new PropertyChangedEventArgs("isVideos"));
+                propertyChanged(this, new PropertyChangedEventArgs("IsVideos"));
             }
         }
 
-        public MainViewModel()
-        {
-            GetModel = new Model();
-            DuplicatesViewModel = new DuplicatesViewModel();
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private string enteredPath = "your path here";
         public string EnteredPath
         {
             get { return enteredPath; }
@@ -114,45 +114,19 @@ namespace DuplicatesFinder_v4.ViewModels
                 if (enteredPath != value)
                 {
                     enteredPath = value;
-                    if (PropertyChanged != null)
+                    if (propertyChanged != null)
                     {
-                        PropertyChanged(this, new PropertyChangedEventArgs("enteredPath"));
+                        propertyChanged(this, new PropertyChangedEventArgs("enteredPath"));
                     }
                 }
             }
         }
-
-        private ICommand onClickSearch;
-        public ICommand OnClickSearch
+        
+        public ICommand OnClickBrowse
         {
             get
             {
-                return onClickSearch ?? (onClickSearch = new RelayCommand((r) =>
-                {
-                    DuplicatesViewModel.CollectionForDuplicatesView.Clear();
-
-                    if (ispics == false && isdocs == false && isvideos == false )
-                    {
-                        MessageBox.Show("You should make the choice");
-                        return;
-                    }
-
-                    GetModel.UserPath = EnteredPath;
-                    GetModel.Pics = isPics;
-                    GetModel.Docs = isDocs;
-                    GetModel.Videos = isVideos;
-                    DuplicatesViewModel.Divide(GetModel.FindDuplicates());
-                }
-                ));
-            }
-        }
-
-        private ICommand onClickBrowse;
-        public ICommand OnClickBrowse
-        {
-            get 
-            {
-                return onClickBrowse ?? ( onClickBrowse = new RelayCommand((r) =>
+                return onClickBrowse ?? (onClickBrowse = new RelayCommand((r) =>
                 {
                     EnteredPath = String.Empty;
                     using (var folderDialog = new FolderBrowserDialog())
@@ -168,5 +142,95 @@ namespace DuplicatesFinder_v4.ViewModels
                 ));
             }
         }
+
+        public ICommand OnClickExport
+        {
+            get
+            {
+                return onClickExport ?? (onClickExport = new RelayCommand((r) =>
+                {
+                    Task.Run(() => DuplicatesViewModel.SaveToTxt());
+                     
+                    MessageBoxResult result = System.Windows.MessageBox.Show(
+                        "Save was successful completed! \nOpen containing folder ? ",
+                        "DuplicatesFinder",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Information);
+                   
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        Process.Start(DuplicatesViewModel.PathWithAppFolder);
+                    }
+                }
+                ));
+            }
+        }
+       
+        public ICommand OnClickSearch
+        {
+            get
+            {
+                return onClickSearch ?? (onClickSearch = new RelayCommand((r) =>
+                {
+                    DuplicatesViewModel.CollectionForDuplicatesView.Clear();
+
+                    if (ispics == false && isdocs == false && isvideos == false)
+                    {
+                        System.Windows.MessageBox.Show("You should make the choice");
+                        return;
+                    }
+
+                    GetModel.UserPath = EnteredPath;
+                    GetModel.Pics = IsPics;
+                    GetModel.Docs = IsDocs;
+                    GetModel.Videos = IsVideos;
+
+                    GetModel.BeginFindDuplicates(list =>
+                        {
+                            RunOnMainThread(() =>
+                            {
+                                if (list.Count == 0)
+                                    System.Windows.MessageBox.Show("No one matches");
+
+                                DuplicatesViewModel.Divide(list);
+                            });
+                        });
+
+                    // RunOnMainThread(() =>
+                    //{ 
+                    //    DuplicatesViewModel.Divide(GetModel.FindDuplicatesAsync()); 
+                    //});
+
+                    //Task.Run(() =>
+                    //{
+                    //    ObservableCollection<ObservableCollection<FileConsist>> findedDuplicates = GetModel.FindDuplicates();
+                    //    OnResult(findedDuplicates);
+                    //});
+                }
+                ));
+            }
+        }
+
+        public MainViewModel()
+        {
+            GetModel = new Model();
+            DuplicatesViewModel = new DuplicatesViewModel();
+        }
+
+        public void RunOnMainThread(Action action)
+        {
+            System.Windows.Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, action);
+        }
+
+        //private void OnResult(ObservableCollection<ObservableCollection<FileConsist>> list)
+        //{
+        //    RunOnMainThread(() =>
+        //        {
+        //            if (list.Count == 0)
+        //                MessageBox.Show("No one matches");
+
+        //            DuplicatesViewModel.Divide(list);
+        //        });
+        //}
     }
 }
