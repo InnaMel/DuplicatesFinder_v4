@@ -49,7 +49,7 @@
                         VerticalAlignment="Center"
                         BorderThickness="0"
                         Text="Check which files you want to find (or forget about it and all will be found)"
-                        TextAlignment="Left"/>
+                        TextAlignment="Left" />
                 </StackPanel>
                 <CheckBox
                     Grid.Column="1"
@@ -274,5 +274,12 @@
                     TextAlignment="Center" />
             </Grid>
         </StackPanel>
+
+        <Rectangle
+            Name="rectAnimation"
+            Grid.RowSpan="3"
+            Fill="#ff3d00"
+            Opacity="{Binding OpacityRectangle}"
+            Visibility="{Binding VisibilityRectangle, Converter={StaticResource BoolToVis}}" />
     </Grid>
 </Window>

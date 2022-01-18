@@ -52,6 +52,8 @@ namespace DuplicatesFinder_v4.ViewModels
         private bool? ispics;
         private bool? isdocs;
         private bool? isvideos;
+        private bool visibilityRectangle = false;
+        private double opacityRectangle = 0.0;
         private string enteredPath = "your path here";
         private ICommand onClickSearch;
         private ICommand onClickBrowse;
@@ -106,6 +108,26 @@ namespace DuplicatesFinder_v4.ViewModels
             }
         }
 
+        public bool VisibilityRectangle
+        {
+            get { return visibilityRectangle; }
+            set
+            {
+                visibilityRectangle = value;
+                propertyChanged(this, new PropertyChangedEventArgs("VisibilityRectangle")); ;
+            }
+        }
+        
+        public double OpacityRectangle
+        {
+            get { return opacityRectangle; }
+            set
+            {
+                opacityRectangle = value;
+                propertyChanged(this, new PropertyChangedEventArgs("OpacityRectangle")); ;
+            }
+        }
+
         public string EnteredPath
         {
             get { return enteredPath; }
@@ -150,13 +172,13 @@ namespace DuplicatesFinder_v4.ViewModels
                 return onClickExport ?? (onClickExport = new RelayCommand((r) =>
                 {
                     Task.Run(() => DuplicatesViewModel.SaveToTxt());
-                     
+
                     MessageBoxResult result = System.Windows.MessageBox.Show(
                         "Save was successful completed! \nOpen containing folder ? ",
                         "DuplicatesFinder",
                         MessageBoxButton.YesNo,
                         MessageBoxImage.Information);
-                   
+
                     if (result == MessageBoxResult.Yes)
                     {
                         Process.Start(DuplicatesViewModel.PathWithAppFolder);
@@ -185,6 +207,9 @@ namespace DuplicatesFinder_v4.ViewModels
                     GetModel.Docs = IsDocs;
                     GetModel.Videos = IsVideos;
 
+                    OpacityRectangle = 0.2;
+                    VisibilityRectangle = true;
+
                     GetModel.BeginFindDuplicates(list =>
                         {
                             RunOnMainThread(() =>
@@ -193,6 +218,9 @@ namespace DuplicatesFinder_v4.ViewModels
                                     System.Windows.MessageBox.Show("No one matches");
 
                                 DuplicatesViewModel.Divide(list);
+
+                                OpacityRectangle = 0.0;
+                                VisibilityRectangle = false;
                             });
                         });
 

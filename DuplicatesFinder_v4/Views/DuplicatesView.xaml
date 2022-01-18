@@ -35,7 +35,7 @@
 
                                     <GridViewColumn Width="70" DisplayMemberBinding="{Binding ExtensionFile}">Type</GridViewColumn>
                                     <GridViewColumn Width="{Binding RelativeSource={RelativeSource Self}, Path=PlacementTarget.ActualWidth}" DisplayMemberBinding="{Binding SizeFile}">Size, kb</GridViewColumn>
-                                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding DateTimeCreateString}">Date of creation</GridViewColumn>
+                                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding DateTimeCreateString}">Date created</GridViewColumn>
                                 </GridView>
                             </ListView.View>
                         </ListView>
