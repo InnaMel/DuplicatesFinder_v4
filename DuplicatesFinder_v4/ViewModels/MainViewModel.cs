@@ -52,7 +52,7 @@ namespace DuplicatesFinder_v4.ViewModels
         private bool? ispics;
         private bool? isdocs;
         private bool? isvideos;
-        private string enteredPath = "your path here";
+        private string enteredPath = "choose a directory";
         private ICommand onClickSearch;
         private ICommand onClickBrowse;
         private ICommand onClickExport;
@@ -64,7 +64,7 @@ namespace DuplicatesFinder_v4.ViewModels
             remove { propertyChanged -= value; }
         }
 
-        public Model GetModel { get; set; }
+        public Model MainModel { get; set; }
         public DuplicatesViewModel DuplicatesViewModel { get; set; }
 
         public bool? IsPics
@@ -180,16 +180,16 @@ namespace DuplicatesFinder_v4.ViewModels
                         return;
                     }
 
-                    GetModel.UserPath = EnteredPath;
-                    GetModel.Pics = IsPics;
-                    GetModel.Docs = IsDocs;
-                    GetModel.Videos = IsVideos;
+                    MainModel.UserPath = EnteredPath;
+                    MainModel.Pics = IsPics;
+                    MainModel.Docs = IsDocs;
+                    MainModel.Videos = IsVideos;
 
-                    GetModel.BeginFindDuplicates(list =>
+                    MainModel.BeginFindDuplicates(list =>
                         {
                             RunOnMainThread(() =>
                             {
-                                if (list.Count == 0)
+                                if (list?.Count == 0)
                                     System.Windows.MessageBox.Show("No one matches");
 
                                 DuplicatesViewModel.Divide(list);
@@ -213,7 +213,7 @@ namespace DuplicatesFinder_v4.ViewModels
 
         public MainViewModel()
         {
-            GetModel = new Model();
+            MainModel = new Model();
             DuplicatesViewModel = new DuplicatesViewModel();
         }
 

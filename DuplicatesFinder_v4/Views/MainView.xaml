@@ -49,7 +49,7 @@
                         VerticalAlignment="Center"
                         BorderThickness="0"
                         Text="Check which files you want to find (or forget about it and all will be found)"
-                        TextAlignment="Left"/>
+                        TextAlignment="Left" />
                 </StackPanel>
                 <CheckBox
                     Grid.Column="1"
@@ -270,7 +270,7 @@
             <Grid Height="30" Background="Azure">
                 <TextBlock
                     VerticalAlignment="Center"
-                    Text="version 4.0  |  2021  |  for questions and suggestions, pls, write me: innamelnikovaukr@gmail.com"
+                    Text="version 4.0  |  2023  |  for questions and suggestions, pls, write me: innamelnikovaukr@gmail.com"
                     TextAlignment="Center" />
             </Grid>
         </StackPanel>
