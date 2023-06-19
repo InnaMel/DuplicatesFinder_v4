@@ -71,7 +71,7 @@ namespace DuplicatesFinder_v4.ViewModels
         {
             var dateCreation = DateTime.Now.ToShortDateString();
             var setFileSaveName = $"Dublicates_{dateCreation}.txt";
-            var setFilePath = Path.Combine($"{PathWithAppFolder}", $"{setFileSaveName}");
+            var setFilePath = Path.Combine(PathWithAppFolder, setFileSaveName);
             var option = new JsonSerializerOptions { WriteIndented = true };
 
             if (File.Exists(setFilePath))
