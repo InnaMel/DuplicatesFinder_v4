@@ -1,8 +1,10 @@
 ﻿using DuplicatesFinder_v4.Models;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 
 namespace DuplicatesFinder_v4.ViewModels
@@ -10,13 +12,12 @@ namespace DuplicatesFinder_v4.ViewModels
     public class DuplicatesViewModel : INotifyPropertyChanged
     {
         private static string pathWithAppFolder;
-        private bool? ischeckedFile;
         private event PropertyChangedEventHandler propertyChanged;
 
-        public event PropertyChangedEventHandler PropertyChanged 
-        { 
-            add{ propertyChanged += value; } 
-            remove{ propertyChanged -= value; } 
+        public event PropertyChangedEventHandler PropertyChanged
+        {
+            add { propertyChanged += value; }
+            remove { propertyChanged -= value; }
         }
 
         public static string PathWithAppFolder
@@ -27,19 +28,6 @@ namespace DuplicatesFinder_v4.ViewModels
                 pathWithAppFolder = Path.Combine($"C:\\Users\\{getCurrentNameUser}\\Downloads", "DuplicatesFinder");
                 Directory.CreateDirectory(pathWithAppFolder);
                 return pathWithAppFolder;
-            }
-        }
-
-        public bool? IsCheckedFile
-        {
-            get
-            {
-                return (ischeckedFile != null) ? ischeckedFile : true;
-            }
-            set
-            {
-                ischeckedFile = value;
-                propertyChanged(this, new PropertyChangedEventArgs("IsCheckedFile"));
             }
         }
 
@@ -89,6 +77,42 @@ namespace DuplicatesFinder_v4.ViewModels
                     }
                 }
             }
+        }
+
+        public void DeleteCheckedItems()
+        {
+            var checkedItems = CollectionForDuplicatesView.SelectMany(item => item.FullInfoFiles).Where(item => item.IsCheckedInView).ToList();
+
+            deleteFromFolder(checkedItems);
+            deleteFromList(checkedItems);
+        }
+
+        private void deleteFromFolder(List<FileConsist> listChecked)
+        {
+            listChecked.ForEach(itemChecked =>
+            {
+                var fullPathFile = Path.Combine(itemChecked.FilePath, itemChecked.FileName);
+                File.Delete(fullPathFile);
+            });
+        }
+
+        private void deleteFromList(List<FileConsist> listChecked)
+        {
+            listChecked.ForEach(itemDeleted =>
+            {
+                foreach (var duplicatesView in CollectionForDuplicatesView)
+                {
+                    // use For loop - because of can`t change collection in Foreach
+                    for (int index = 0; index < duplicatesView.FullInfoFiles.Count(); index++)
+                    {
+                        var currentFile = duplicatesView.FullInfoFiles[index];
+                        if (itemDeleted.FilePath == currentFile.FilePath && itemDeleted.FileName == currentFile.FileName)
+                        {
+                            duplicatesView.FullInfoFiles.Remove(currentFile);
+                        }
+                    }
+                }
+            });
         }
     }
 }

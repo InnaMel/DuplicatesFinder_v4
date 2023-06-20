@@ -14,9 +14,11 @@
                 <DataTemplate>
                     <Border Margin="0,2,0,20">
                         <ListView
+                            Name="WholeList"
                             Width="{Binding ActualWidth, ElementName=MainGrid}"
                             BorderThickness="0"
-                            ItemsSource="{Binding FullInfoFiles}">
+                            ItemsSource="{Binding FullInfoFiles}"
+                            SelectionMode="Multiple">
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
                                     <Setter Property="Foreground" Value="#2b4566" />
@@ -35,7 +37,8 @@
                                                     Content="{Binding FilePath}"
                                                     FontSize="14"
                                                     Foreground="#2b4566"
-                                                    IsChecked="{Binding IsCheckedFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                    IsChecked="{Binding IsCheckedInView}"
+                                                    ListView.IsSelected="True" />
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>

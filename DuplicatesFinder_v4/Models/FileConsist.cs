@@ -28,7 +28,10 @@ namespace DuplicatesFinder_v4.Models
         [JsonPropertyName("File created")]
         public string DateTimeCreateString { get; set; }
 
-        public bool IsChecked = false;
+        public bool IsCheckedAsDuplicate = false;
+
+        // for Binding to IsChecked in CheckBox
+        public bool IsCheckedInView { get; set; }
 
         public FileConsist() {}
         public FileConsist(FileInfo fullInfoFile)
