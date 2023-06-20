@@ -35,7 +35,7 @@
 
     <Style x:Key="HeadRedGridView" TargetType="GridViewColumnHeader">
         <Setter Property="Foreground" Value="#ff3d00" />
-        <Setter Property="FontWeight" Value="Black" />
+        <Setter Property="FontWeight" Value="DemiBold" />
         <Setter Property="FontSize" Value="14" />
     </Style>
 

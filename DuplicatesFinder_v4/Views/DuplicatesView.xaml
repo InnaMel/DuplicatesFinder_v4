@@ -14,28 +14,38 @@
                 <DataTemplate>
                     <Border Margin="0,2,0,20">
                         <ListView
+                            Name="WholeList"
                             Width="{Binding ActualWidth, ElementName=MainGrid}"
                             BorderThickness="0"
-                            ItemsSource="{Binding FullInfoFiles}">
+                            ItemsSource="{Binding FullInfoFiles}"
+                            SelectionMode="Multiple">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="Foreground" Value="#2b4566" />
+                                </Style>
+                            </ListView.ItemContainerStyle>
                             <ListView.View>
                                 <GridView ColumnHeaderContainerStyle="{StaticResource GridViewHeaderStyle}">
+                                    <GridViewColumn
+                                        Width="450"
+                                        Header="{Binding NameDuplicates}"
+                                        HeaderContainerStyle="{StaticResource HeadRedGridView}">
 
-                                    <GridViewColumn Width="450" Header="{Binding NameDuplicates}">
-                                        <GridViewColumn.HeaderContainerStyle>
-                                            <Style TargetType="{x:Type GridViewColumnHeader}">
-                                                <Setter Property="Foreground" Value="#ff3d00" />
-                                            </Style>
-                                        </GridViewColumn.HeaderContainerStyle>
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
-                                                <CheckBox Content="{Binding FilePath}" IsChecked="{Binding IsCheckedFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                <CheckBox
+                                                    Content="{Binding FilePath}"
+                                                    FontSize="14"
+                                                    Foreground="#2b4566"
+                                                    IsChecked="{Binding IsCheckedInView}"
+                                                    ListView.IsSelected="True" />
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
 
                                     <GridViewColumn Width="70" DisplayMemberBinding="{Binding ExtensionFile}">Type</GridViewColumn>
                                     <GridViewColumn Width="{Binding RelativeSource={RelativeSource Self}, Path=PlacementTarget.ActualWidth}" DisplayMemberBinding="{Binding SizeFile}">Size, kb</GridViewColumn>
-                                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding DateTimeCreateString}">Date of creation</GridViewColumn>
+                                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding DateTimeCreateString}">Creation Date</GridViewColumn>
                                 </GridView>
                             </ListView.View>
                         </ListView>

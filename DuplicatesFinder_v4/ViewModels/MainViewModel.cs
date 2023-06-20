@@ -56,6 +56,8 @@ namespace DuplicatesFinder_v4.ViewModels
         private ICommand onClickSearch;
         private ICommand onClickBrowse;
         private ICommand onClickExport;
+        private ICommand onClickDelete;
+
         private event PropertyChangedEventHandler propertyChanged;
 
         public event PropertyChangedEventHandler PropertyChanged
@@ -206,6 +208,18 @@ namespace DuplicatesFinder_v4.ViewModels
                     //    ObservableCollection<ObservableCollection<FileConsist>> findedDuplicates = GetModel.FindDuplicates();
                     //    OnResult(findedDuplicates);
                     //});
+                }
+                ));
+            }
+        }
+
+        public ICommand OnClickDelete
+        {
+            get
+            {
+                return onClickDelete ?? (onClickDelete = new RelayCommand((r) =>
+                {
+                   DuplicatesViewModel.DeleteCheckedItems();
                 }
                 ));
             }

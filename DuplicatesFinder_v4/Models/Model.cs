@@ -45,16 +45,16 @@ namespace DuplicatesFinder_v4.Models
 
                 for (int i = 0; i < allFiles.Count; i++)
                 {
-                    if (allFiles[i].IsChecked == false)
+                    if (allFiles[i].IsCheckedAsDuplicate == false)
                     {
                         var subsidiaryList = new List<FileConsist>();
 
                         for (int j = i; j < allFiles.Count; j++)
                         {
-                            if (allFiles[j].IsChecked == false && allFiles[i].FileName == allFiles[j].FileName)
+                            if (allFiles[j].IsCheckedAsDuplicate == false && allFiles[i].FileName == allFiles[j].FileName)
                             {
                                 subsidiaryList.Add(allFiles[j]);
-                                allFiles[j].IsChecked = true;
+                                allFiles[j].IsCheckedAsDuplicate = true;
                             }
                         }
                         if (subsidiaryList.Count > 1)
