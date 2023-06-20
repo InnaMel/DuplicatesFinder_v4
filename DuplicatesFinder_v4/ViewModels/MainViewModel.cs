@@ -57,6 +57,7 @@ namespace DuplicatesFinder_v4.ViewModels
         private ICommand onClickBrowse;
         private ICommand onClickExport;
         private ICommand onClickDelete;
+        private ICommand onClickUndoDelete;
 
         private event PropertyChangedEventHandler propertyChanged;
 
@@ -220,6 +221,18 @@ namespace DuplicatesFinder_v4.ViewModels
                 return onClickDelete ?? (onClickDelete = new RelayCommand((r) =>
                 {
                    DuplicatesViewModel.DeleteCheckedItems();
+                }
+                ));
+            }
+        }
+
+        public ICommand OnClickUndoDelete
+        {
+            get
+            {
+                return onClickUndoDelete ?? (onClickUndoDelete = new RelayCommand((r) =>
+                {
+                    DuplicatesViewModel.UndoDeleteCheckedItems();
                 }
                 ));
             }

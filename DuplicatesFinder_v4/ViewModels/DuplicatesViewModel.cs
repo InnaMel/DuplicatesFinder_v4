@@ -81,10 +81,14 @@ namespace DuplicatesFinder_v4.ViewModels
 
         public void DeleteCheckedItems()
         {
-            var checkedItems = CollectionForDuplicatesView.SelectMany(item => item.FullInfoFiles).Where(item => item.IsCheckedInView).ToList();
+            deleteFromFolder(checkedItems());
+            deleteFromList(checkedItems());
+        }
 
-            deleteFromFolder(checkedItems);
-            deleteFromList(checkedItems);
+        public void UndoDeleteCheckedItems()
+        {
+            recoveryToFolder();
+            recoveryToList();
         }
 
         private void deleteFromFolder(List<FileConsist> listChecked)
@@ -113,6 +117,31 @@ namespace DuplicatesFinder_v4.ViewModels
                     }
                 }
             });
+        }
+
+        private void recoveryToFolder()
+        {
+            var deletedFiles = checkedItems();
+
+
+        }
+
+        private void recoveryToList()
+        {
+            var deletedFiles = checkedItems();
+
+            deletedFiles.ForEach(deletedFile =>
+            {
+
+            });
+        }
+
+        private List<FileConsist> checkedItems()
+        {
+            return CollectionForDuplicatesView
+                .SelectMany(item => item.FullInfoFiles)
+                .Where(item => item.IsCheckedInView)
+                .ToList();
         }
     }
 }
