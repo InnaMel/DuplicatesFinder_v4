@@ -46,7 +46,7 @@ namespace DuplicatesFinder_v4.ViewModels
                 {
                     var eachDuplicatesForView = new ListForViewDuplicates();
 
-                    eachDuplicatesForView.NameDuplicates = collectionFileConsist[0].FileName;
+                    eachDuplicatesForView.NameDuplicates = collectionFileConsist[0].FileName.ToUpper();
 
                     eachDuplicatesForView.FullInfoFiles = collectionFileConsist;
 
@@ -81,8 +81,9 @@ namespace DuplicatesFinder_v4.ViewModels
 
         public void DeleteCheckedItems()
         {
-            deleteFromFolder(checkedItems());
-            deleteFromList(checkedItems());
+            saveFilesToTempFolder();
+            deleteFromFolder();
+            deleteFromList();
         }
 
         public void UndoDeleteCheckedItems()
@@ -91,18 +92,55 @@ namespace DuplicatesFinder_v4.ViewModels
             recoveryToList();
         }
 
-        private void deleteFromFolder(List<FileConsist> listChecked)
+        private void saveFilesToTempFolder()
         {
-            listChecked.ForEach(itemChecked =>
+            var checkedUserItems = checkedItems();
+            var index = 1;
+            var isBreak = false;
+            var temporaryFolderName = "TempDF";
+            var pathForTemp = Path.Combine(PathWithAppFolder, temporaryFolderName);
+            if (!Directory.Exists(pathForTemp))
+            {
+                Directory.CreateDirectory(pathForTemp);
+            }
+
+            checkedUserItems.ForEach(checkedItem =>
+            {
+                isBreak = false;
+                var fullPathCurrentFile = Path.Combine(checkedItem.FilePath, checkedItem.FileName);
+                for (int i = index; i < checkedUserItems.Count; i++)
+                {
+                    if (checkedItem == checkedUserItems[i])
+                    {
+                        var pathInTemp = Path.Combine(pathForTemp, $"temp{checkedItem.GetHashCode()}");
+                        Directory.CreateDirectory(pathInTemp);
+                        var newfullPathAnotherCurrentFile = Path.Combine(pathInTemp, checkedItem.FileName);
+                        File.Copy(fullPathCurrentFile, newfullPathAnotherCurrentFile);
+                        isBreak = true;
+                        break;
+                    }
+                }
+                if (!isBreak)
+                {
+                    var newfullPathCurrentFile = Path.Combine(pathForTemp, checkedItem.FileName);
+                    File.Copy(fullPathCurrentFile, newfullPathCurrentFile);
+                }
+                index++;
+            });
+        }
+
+        private void deleteFromFolder()
+        {
+            checkedItems().ForEach(itemChecked =>
             {
                 var fullPathFile = Path.Combine(itemChecked.FilePath, itemChecked.FileName);
                 File.Delete(fullPathFile);
             });
         }
 
-        private void deleteFromList(List<FileConsist> listChecked)
+        private void deleteFromList()
         {
-            listChecked.ForEach(itemDeleted =>
+            checkedItems().ForEach(itemDeleted =>
             {
                 foreach (var duplicatesView in CollectionForDuplicatesView)
                 {
@@ -122,8 +160,6 @@ namespace DuplicatesFinder_v4.ViewModels
         private void recoveryToFolder()
         {
             var deletedFiles = checkedItems();
-
-
         }
 
         private void recoveryToList()
@@ -143,5 +179,6 @@ namespace DuplicatesFinder_v4.ViewModels
                 .Where(item => item.IsCheckedInView)
                 .ToList();
         }
+
     }
 }

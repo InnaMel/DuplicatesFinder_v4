@@ -51,7 +51,7 @@ namespace DuplicatesFinder_v4.Models
 
                         for (int j = i; j < allFiles.Count; j++)
                         {
-                            if (allFiles[j].IsCheckedAsDuplicate == false && allFiles[i].FileName == allFiles[j].FileName)
+                            if (allFiles[j].IsCheckedAsDuplicate == false && allFiles[i].FileName.ToLower() == allFiles[j].FileName.ToLower())
                             {
                                 subsidiaryList.Add(allFiles[j]);
                                 allFiles[j].IsCheckedAsDuplicate = true;

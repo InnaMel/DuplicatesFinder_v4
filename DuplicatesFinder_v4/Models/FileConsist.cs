@@ -48,5 +48,23 @@ namespace DuplicatesFinder_v4.Models
         {
             return $"{FileName} *** {FilePath} *** {DateTimeCreate.ToString("g")}";
         }
+
+        public static bool operator ==(FileConsist compareFile0, FileConsist compareFile1)
+        {
+            if (compareFile0.FileName.ToLower() == compareFile1.FileName.ToLower() && compareFile0.ExtensionFile == compareFile1.ExtensionFile)
+            {
+                return true;
+            }
+            else return false;
+        }
+        public static bool operator !=(FileConsist compareFile0, FileConsist compareFile1)
+        {
+            if (compareFile0.ExtensionFile != compareFile1.ExtensionFile)
+            {
+                return true;
+            }
+            else return false;
+        }
+
     }
 }
