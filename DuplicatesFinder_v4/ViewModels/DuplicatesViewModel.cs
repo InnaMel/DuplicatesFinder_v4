@@ -13,6 +13,7 @@ namespace DuplicatesFinder_v4.ViewModels
 {
     public class DuplicatesViewModel : INotifyPropertyChanged
     {
+        const string TEMPORARY_FOLDER_NAME = "TempDF";
         private static string pathWithAppFolder;
         private event PropertyChangedEventHandler propertyChanged;
         private List<FileTempStorage> listTempFiles;
@@ -38,6 +39,12 @@ namespace DuplicatesFinder_v4.ViewModels
 
         public DuplicatesViewModel()
         {
+            var pathTempFolder = Path.Combine(PathWithAppFolder, TEMPORARY_FOLDER_NAME);
+            deleteTempFiles();
+            if (Directory.Exists(pathTempFolder))
+            {
+                Directory.Delete(pathTempFolder);
+            }
             CollectionForDuplicatesView = new ObservableCollection<ListForViewDuplicates>();
             listTempFiles = new List<FileTempStorage>();
         }
@@ -96,6 +103,25 @@ namespace DuplicatesFinder_v4.ViewModels
             recoveryToList();
         }
 
+        private Task deleteTempFiles()
+        {
+            Task task = Task.Run(() =>
+            {
+                var pathTempFolder = Path.Combine(PathWithAppFolder, TEMPORARY_FOLDER_NAME);
+                DirectoryInfo directoryInfo = new DirectoryInfo(pathTempFolder);
+
+                foreach (FileInfo file in directoryInfo.GetFiles())
+                {
+                    file.Delete();
+                }
+                foreach (DirectoryInfo dir in directoryInfo.GetDirectories())
+                {
+                    dir.Delete(true);
+                }
+            });
+            return task;
+        }
+
         private Task saveFilesToTempFolderAsync()
         {
             Task taskSaveToTempFolder = Task.Run(() =>
@@ -103,8 +129,7 @@ namespace DuplicatesFinder_v4.ViewModels
                 var checkedUserItems = checkedFiles();
                 var index = 1;
                 var isBreak = false;
-                var temporaryFolderName = "TempDF";
-                var pathTempFolder = Path.Combine(PathWithAppFolder, temporaryFolderName);
+                var pathTempFolder = Path.Combine(PathWithAppFolder, TEMPORARY_FOLDER_NAME);
                 if (!Directory.Exists(pathTempFolder))
                 {
                     Directory.CreateDirectory(pathTempFolder);
