@@ -118,6 +118,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Models\FileConsist.cs" />
+    <Compile Include="Models\FileTempStorage.cs" />
     <Compile Include="Models\Model.cs" />
     <Compile Include="ViewModels\DuplicatesViewModel.cs" />
     <Compile Include="ViewModels\ListForViewDublicates.cs" />

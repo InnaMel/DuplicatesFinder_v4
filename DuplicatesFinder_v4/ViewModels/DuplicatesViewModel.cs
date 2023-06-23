@@ -1,4 +1,5 @@
 ﻿using DuplicatesFinder_v4.Models;
+using DuplicatesFinderV4.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -6,6 +7,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace DuplicatesFinder_v4.ViewModels
 {
@@ -13,6 +15,7 @@ namespace DuplicatesFinder_v4.ViewModels
     {
         private static string pathWithAppFolder;
         private event PropertyChangedEventHandler propertyChanged;
+        private List<FileTempStorage> listTempFiles;
 
         public event PropertyChangedEventHandler PropertyChanged
         {
@@ -36,6 +39,7 @@ namespace DuplicatesFinder_v4.ViewModels
         public DuplicatesViewModel()
         {
             CollectionForDuplicatesView = new ObservableCollection<ListForViewDuplicates>();
+            listTempFiles = new List<FileTempStorage>();
         }
 
         public void Divide(ObservableCollection<ObservableCollection<FileConsist>> wholeCollectionFileConsist)
@@ -79,9 +83,9 @@ namespace DuplicatesFinder_v4.ViewModels
             }
         }
 
-        public void DeleteCheckedItems()
+        public async void DeleteCheckedItems()
         {
-            saveFilesToTempFolder();
+            await saveFilesToTempFolderAsync();
             deleteFromFolder();
             deleteFromList();
         }
@@ -92,46 +96,56 @@ namespace DuplicatesFinder_v4.ViewModels
             recoveryToList();
         }
 
-        private void saveFilesToTempFolder()
+        private Task saveFilesToTempFolderAsync()
         {
-            var checkedUserItems = checkedItems();
-            var index = 1;
-            var isBreak = false;
-            var temporaryFolderName = "TempDF";
-            var pathForTemp = Path.Combine(PathWithAppFolder, temporaryFolderName);
-            if (!Directory.Exists(pathForTemp))
+            Task taskSaveToTempFolder = Task.Run(() =>
             {
-                Directory.CreateDirectory(pathForTemp);
-            }
+                var checkedUserItems = checkedFiles();
+                var index = 1;
+                var isBreak = false;
+                var temporaryFolderName = "TempDF";
+                var pathTempFolder = Path.Combine(PathWithAppFolder, temporaryFolderName);
+                if (!Directory.Exists(pathTempFolder))
+                {
+                    Directory.CreateDirectory(pathTempFolder);
+                }
 
-            checkedUserItems.ForEach(checkedItem =>
-            {
-                isBreak = false;
-                var fullPathCurrentFile = Path.Combine(checkedItem.FilePath, checkedItem.FileName);
-                for (int i = index; i < checkedUserItems.Count; i++)
+                checkedUserItems.ForEach(checkedItem =>
                 {
-                    if (checkedItem == checkedUserItems[i])
+                    isBreak = false;
+                    var fullPathCurrentFile = Path.Combine(checkedItem.FilePath, checkedItem.FileName);
+                    for (int i = index; i < checkedUserItems.Count; i++)
                     {
-                        var pathInTemp = Path.Combine(pathForTemp, $"temp{checkedItem.GetHashCode()}");
-                        Directory.CreateDirectory(pathInTemp);
-                        var newfullPathAnotherCurrentFile = Path.Combine(pathInTemp, checkedItem.FileName);
-                        File.Copy(fullPathCurrentFile, newfullPathAnotherCurrentFile);
-                        isBreak = true;
-                        break;
+                        if (checkedItem == checkedUserItems[i])
+                        {
+                            var pathNestedTempFolder = Path.Combine(pathTempFolder, $"temp{checkedItem.GetHashCode()}");
+                            if (!Directory.Exists(pathNestedTempFolder))
+                            {
+                                Directory.CreateDirectory(pathNestedTempFolder);
+                            }
+                            var newfullPathNestedTempFile = Path.Combine(pathNestedTempFolder, checkedItem.FileName);
+                            File.Copy(fullPathCurrentFile, newfullPathNestedTempFile);
+
+                            addTolistTempFiles(checkedItem, newfullPathNestedTempFile);
+                            isBreak = true;
+                            break;
+                        }
                     }
-                }
-                if (!isBreak)
-                {
-                    var newfullPathCurrentFile = Path.Combine(pathForTemp, checkedItem.FileName);
-                    File.Copy(fullPathCurrentFile, newfullPathCurrentFile);
-                }
-                index++;
+                    if (!isBreak)
+                    {
+                        var newfullPathTempFile = Path.Combine(pathTempFolder, checkedItem.FileName);
+                        File.Copy(fullPathCurrentFile, newfullPathTempFile);
+                        addTolistTempFiles(checkedItem, newfullPathTempFile);
+                    }
+                    index++;
+                });
             });
+            return taskSaveToTempFolder;
         }
 
         private void deleteFromFolder()
         {
-            checkedItems().ForEach(itemChecked =>
+            checkedFiles().ForEach(itemChecked =>
             {
                 var fullPathFile = Path.Combine(itemChecked.FilePath, itemChecked.FileName);
                 File.Delete(fullPathFile);
@@ -140,7 +154,7 @@ namespace DuplicatesFinder_v4.ViewModels
 
         private void deleteFromList()
         {
-            checkedItems().ForEach(itemDeleted =>
+            checkedFiles().ForEach(itemDeleted =>
             {
                 foreach (var duplicatesView in CollectionForDuplicatesView)
                 {
@@ -159,25 +173,58 @@ namespace DuplicatesFinder_v4.ViewModels
 
         private void recoveryToFolder()
         {
-            var deletedFiles = checkedItems();
+            listTempFiles.ForEach(deletedFile =>
+            {
+                var currentPathFile = Path.Combine(deletedFile.FilePath, deletedFile.FileName);
+                File.Copy(deletedFile.TempPath, currentPathFile);
+            });
         }
 
         private void recoveryToList()
         {
-            var deletedFiles = checkedItems();
-
-            deletedFiles.ForEach(deletedFile =>
+            checkedFiles().ForEach(checkedFile =>
             {
-
+                var isMatch = false;
+                for (int i = 0; i < CollectionForDuplicatesView.Count; i++)
+                {
+                    var currentFile = CollectionForDuplicatesView[i];
+                    if (checkedFile.FileName == currentFile.NameDuplicates)
+                    {
+                        currentFile.FullInfoFiles.Add(checkedFile);
+                        isMatch = true;
+                        break;
+                    }
+                    if (!isMatch)
+                    {
+                        var fileInfo = new ObservableCollection<FileConsist>();
+                        fileInfo.Add(new FileConsist()
+                        {
+                            FileName = checkedFile.FileName,
+                            FilePath = checkedFile.FilePath,
+                            FileExtension = checkedFile.FileExtension,
+                            FileSize = checkedFile.FileSize,
+                            DateTimeCreate = checkedFile.DateTimeCreate,
+                            IsCheckedInView = checkedFile.IsCheckedInView
+                        });
+                        var newListForViewDuplicates = new ListForViewDuplicates() { FullInfoFiles = fileInfo, NameDuplicates = checkedFile.FileName };
+                        CollectionForDuplicatesView.Add(newListForViewDuplicates);
+                    }
+                }
             });
         }
 
-        private List<FileConsist> checkedItems()
+        private List<FileConsist> checkedFiles()
         {
             return CollectionForDuplicatesView
                 .SelectMany(item => item.FullInfoFiles)
                 .Where(item => item.IsCheckedInView)
                 .ToList();
+        }
+
+        private void addTolistTempFiles(FileConsist fileConsist, string tempPath)
+        {
+            var currentTempFile = new FileTempStorage(fileConsist, tempPath);
+            listTempFiles.Add(currentTempFile);
         }
 
     }

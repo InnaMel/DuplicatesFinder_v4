@@ -17,10 +17,10 @@ namespace DuplicatesFinder_v4.Models
         public string FilePath { get; set; }
         
         [JsonIgnore]
-        public string ExtensionFile { get; set; }
+        public string FileExtension { get; set; }
         
         [JsonPropertyName("File size, kb")]
-        public double SizeFile { get; set; }
+        public double FileSize { get; set; }
         
         [JsonIgnore]
         public DateTime DateTimeCreate { get; set; }
@@ -38,8 +38,8 @@ namespace DuplicatesFinder_v4.Models
         {
             this.FileName = fullInfoFile.Name;
             this.FilePath = fullInfoFile.DirectoryName;
-            this.ExtensionFile = fullInfoFile.Extension.Remove(0, 1).ToUpper();
-            this.SizeFile = Math.Round(Convert.ToDouble((fullInfoFile.Length) / 1024), MidpointRounding.AwayFromZero);
+            this.FileExtension = fullInfoFile.Extension.Remove(0, 1).ToUpper();
+            this.FileSize = Math.Round(Convert.ToDouble((fullInfoFile.Length) / 1024), MidpointRounding.AwayFromZero);
             this.DateTimeCreate = fullInfoFile.CreationTime;
             this.DateTimeCreateString = fullInfoFile.CreationTime.ToString("g");
         }
@@ -51,7 +51,7 @@ namespace DuplicatesFinder_v4.Models
 
         public static bool operator ==(FileConsist compareFile0, FileConsist compareFile1)
         {
-            if (compareFile0.FileName.ToLower() == compareFile1.FileName.ToLower() && compareFile0.ExtensionFile == compareFile1.ExtensionFile)
+            if (compareFile0.FileName.ToLower() == compareFile1.FileName.ToLower() && compareFile0.FileExtension == compareFile1.FileExtension)
             {
                 return true;
             }
@@ -59,7 +59,7 @@ namespace DuplicatesFinder_v4.Models
         }
         public static bool operator !=(FileConsist compareFile0, FileConsist compareFile1)
         {
-            if (compareFile0.ExtensionFile != compareFile1.ExtensionFile)
+            if (compareFile0.FileExtension != compareFile1.FileExtension)
             {
                 return true;
             }
