@@ -35,7 +35,6 @@ namespace DuplicatesFinder_v4.ViewModels
         }
         public ObservableCollection<ListForViewDuplicates> CollectionForDuplicatesView { get; set; }
 
-
         public DuplicatesViewModel()
         {
             pathTempFolder = Path.Combine(PathWithAppFolder, TEMPORARY_FOLDER_NAME);
@@ -86,18 +85,18 @@ namespace DuplicatesFinder_v4.ViewModels
 
         public async void DeleteCheckedItems()
         {
-            await saveFilesToTempFolderAsync();
-            deleteFromFolder();
             deleteFromList();
+            await saveFilesToTempFolderAsync();
+            await deleteFromFolder();
         }
 
-        public void UndoDeleteCheckedItems()
+        public async void UndoDeleteCheckedItems()
         {
-            recoveryToFolder();
             recoveryToList();
+            await recoveryToFolder();
         }
 
-        public Task DeleteTempFiles()
+        public Task DeleteTempFilesAsync()
         {
             if (Directory.Exists(pathTempFolder))
             {
@@ -118,7 +117,7 @@ namespace DuplicatesFinder_v4.ViewModels
                         foreach (var directory in directories)
                         {
                             pathTempFolder = directory;
-                            DeleteTempFiles();
+                            DeleteTempFilesAsync();
                         }
                     }
                     foreach (var dir in directoryInfo.GetDirectories())
@@ -178,12 +177,15 @@ namespace DuplicatesFinder_v4.ViewModels
             return taskSaveToTempFolder;
         }
 
-        private void deleteFromFolder()
+        private Task deleteFromFolder()
         {
-            checkedFiles().ForEach(itemChecked =>
+            return Task.Run(() =>
             {
-                var fullPathFile = Path.Combine(itemChecked.FilePath, itemChecked.FileName);
-                File.Delete(fullPathFile);
+                checkedFiles().ForEach(itemChecked =>
+                {
+                    var fullPathFile = Path.Combine(itemChecked.FilePath, itemChecked.FileName);
+                    File.Delete(fullPathFile);
+                });
             });
         }
 
@@ -206,12 +208,15 @@ namespace DuplicatesFinder_v4.ViewModels
             });
         }
 
-        private void recoveryToFolder()
+        private Task recoveryToFolder()
         {
-            listTempFiles.ForEach(deletedFile =>
+            return Task.Run(() =>
             {
-                var currentPathFile = Path.Combine(deletedFile.FilePath, deletedFile.FileName);
-                File.Copy(deletedFile.TempPath, currentPathFile);
+                listTempFiles.ForEach(deletedFile =>
+                {
+                    var currentPathFile = Path.Combine(deletedFile.FilePath, deletedFile.FileName);
+                    File.Copy(deletedFile.TempPath, currentPathFile);
+                });
             });
         }
 
@@ -230,7 +235,7 @@ namespace DuplicatesFinder_v4.ViewModels
                         break;
                     }
                 }
-                
+
                 if (!isMatch)
                 {
                     var fileInfo = new ObservableCollection<FileConsist>();

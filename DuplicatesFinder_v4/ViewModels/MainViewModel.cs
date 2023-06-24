@@ -53,6 +53,7 @@ namespace DuplicatesFinder_v4.ViewModels
         private bool? isdocs;
         private bool? isvideos;
         private string enteredPath = "choose a directory";
+
         private ICommand onClickSearch;
         private ICommand onClickBrowse;
         private ICommand onClickExport;
@@ -176,7 +177,7 @@ namespace DuplicatesFinder_v4.ViewModels
                 return onClickSearch ?? (onClickSearch = new RelayCommand((r) =>
                 {
                     DuplicatesViewModel.CollectionForDuplicatesView.Clear();
-                    DuplicatesViewModel.DeleteTempFiles();
+                    DuplicatesViewModel.DeleteTempFilesAsync();
 
                     if (ispics == false && isdocs == false && isvideos == false)
                     {
