@@ -15,15 +15,14 @@ namespace DuplicatesFinder_v4.ViewModels
     {
         const string TEMPORARY_FOLDER_NAME = "TempDF";
         private static string pathWithAppFolder;
-        private event PropertyChangedEventHandler propertyChanged;
         private List<FileTempStorage> listTempFiles;
-
+        private string pathTempFolder;
+        private event PropertyChangedEventHandler propertyChanged;
         public event PropertyChangedEventHandler PropertyChanged
         {
             add { propertyChanged += value; }
             remove { propertyChanged -= value; }
         }
-
         public static string PathWithAppFolder
         {
             get
@@ -34,17 +33,12 @@ namespace DuplicatesFinder_v4.ViewModels
                 return pathWithAppFolder;
             }
         }
-
         public ObservableCollection<ListForViewDuplicates> CollectionForDuplicatesView { get; set; }
+
 
         public DuplicatesViewModel()
         {
-            var pathTempFolder = Path.Combine(PathWithAppFolder, TEMPORARY_FOLDER_NAME);
-            deleteTempFiles();
-            if (Directory.Exists(pathTempFolder))
-            {
-                Directory.Delete(pathTempFolder);
-            }
+            pathTempFolder = Path.Combine(PathWithAppFolder, TEMPORARY_FOLDER_NAME);
             CollectionForDuplicatesView = new ObservableCollection<ListForViewDuplicates>();
             listTempFiles = new List<FileTempStorage>();
         }
@@ -103,23 +97,39 @@ namespace DuplicatesFinder_v4.ViewModels
             recoveryToList();
         }
 
-        private Task deleteTempFiles()
+        public Task DeleteTempFiles()
         {
-            Task task = Task.Run(() =>
+            if (Directory.Exists(pathTempFolder))
             {
-                var pathTempFolder = Path.Combine(PathWithAppFolder, TEMPORARY_FOLDER_NAME);
-                DirectoryInfo directoryInfo = new DirectoryInfo(pathTempFolder);
+                var sourcePathTempFolder = pathTempFolder;
+                Task task = Task.Run(() =>
+                {
+                    List<string> directories = null;
+                    var directoryInfo = new DirectoryInfo(pathTempFolder);
 
-                foreach (FileInfo file in directoryInfo.GetFiles())
-                {
-                    file.Delete();
-                }
-                foreach (DirectoryInfo dir in directoryInfo.GetDirectories())
-                {
-                    dir.Delete(true);
-                }
-            });
-            return task;
+                    foreach (FileInfo file in directoryInfo.GetFiles())
+                    {
+                        file.Delete();
+                    }
+
+                    directories = Directory.GetDirectories(pathTempFolder).ToList();
+                    if (directories != null)
+                    {
+                        foreach (var directory in directories)
+                        {
+                            pathTempFolder = directory;
+                            DeleteTempFiles();
+                        }
+                    }
+                    foreach (var dir in directoryInfo.GetDirectories())
+                    {
+                        dir.Delete(true);
+                    }
+                    Directory.Delete(sourcePathTempFolder);
+                });
+                return task;
+            }
+            return Task.CompletedTask;
         }
 
         private Task saveFilesToTempFolderAsync()
@@ -207,33 +217,35 @@ namespace DuplicatesFinder_v4.ViewModels
 
         private void recoveryToList()
         {
-            checkedFiles().ForEach(checkedFile =>
+            listTempFiles.ForEach(checkedFile =>
             {
                 var isMatch = false;
                 for (int i = 0; i < CollectionForDuplicatesView.Count; i++)
                 {
                     var currentFile = CollectionForDuplicatesView[i];
-                    if (checkedFile.FileName == currentFile.NameDuplicates)
+                    if (checkedFile.FileName.ToUpper() == currentFile.NameDuplicates)
                     {
                         currentFile.FullInfoFiles.Add(checkedFile);
                         isMatch = true;
                         break;
                     }
-                    if (!isMatch)
+                }
+                
+                if (!isMatch)
+                {
+                    var fileInfo = new ObservableCollection<FileConsist>();
+                    fileInfo.Add(new FileConsist()
                     {
-                        var fileInfo = new ObservableCollection<FileConsist>();
-                        fileInfo.Add(new FileConsist()
-                        {
-                            FileName = checkedFile.FileName,
-                            FilePath = checkedFile.FilePath,
-                            FileExtension = checkedFile.FileExtension,
-                            FileSize = checkedFile.FileSize,
-                            DateTimeCreate = checkedFile.DateTimeCreate,
-                            IsCheckedInView = checkedFile.IsCheckedInView
-                        });
-                        var newListForViewDuplicates = new ListForViewDuplicates() { FullInfoFiles = fileInfo, NameDuplicates = checkedFile.FileName };
-                        CollectionForDuplicatesView.Add(newListForViewDuplicates);
-                    }
+                        FileName = checkedFile.FileName,
+                        FilePath = checkedFile.FilePath,
+                        FileExtension = checkedFile.FileExtension,
+                        FileSize = checkedFile.FileSize,
+                        DateTimeCreate = checkedFile.DateTimeCreate,
+                        DateTimeModified = checkedFile.DateTimeModified,
+                        IsCheckedInView = checkedFile.IsCheckedInView
+                    });
+                    var newListForViewDuplicates = new ListForViewDuplicates() { FullInfoFiles = fileInfo, NameDuplicates = checkedFile.FileName };
+                    CollectionForDuplicatesView.Add(newListForViewDuplicates);
                 }
             });
         }

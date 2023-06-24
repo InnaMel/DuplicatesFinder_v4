@@ -27,6 +27,12 @@ namespace DuplicatesFinder_v4.Models
         
         [JsonPropertyName("File created")]
         public string DateTimeCreateString { get; set; }
+        
+        [JsonIgnore]
+        public DateTime DateTimeModified { get; set; }
+
+        [JsonPropertyName("Last time modified")]
+        public string DateTimeModifiedString{ get; set; }
 
         public bool IsCheckedAsDuplicate = false;
 
@@ -42,6 +48,8 @@ namespace DuplicatesFinder_v4.Models
             this.FileSize = Math.Round(Convert.ToDouble((fullInfoFile.Length) / 1024), MidpointRounding.AwayFromZero);
             this.DateTimeCreate = fullInfoFile.CreationTime;
             this.DateTimeCreateString = fullInfoFile.CreationTime.ToString("g");
+            this.DateTimeModified = File.GetLastWriteTime(fullInfoFile.FullName);
+            this.DateTimeModifiedString = DateTimeModified.ToString("g");
         }
 
         public override string ToString()
