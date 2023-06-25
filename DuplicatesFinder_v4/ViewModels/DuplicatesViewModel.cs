@@ -11,18 +11,12 @@ using System.Threading.Tasks;
 
 namespace DuplicatesFinder_v4.ViewModels
 {
-    public class DuplicatesViewModel : INotifyPropertyChanged
+    public class DuplicatesViewModel
     {
         const string TEMPORARY_FOLDER_NAME = "TempDF";
         private static string pathWithAppFolder;
         private List<FileTempStorage> listTempFiles;
         private string pathTempFolder;
-        private event PropertyChangedEventHandler propertyChanged;
-        public event PropertyChangedEventHandler PropertyChanged
-        {
-            add { propertyChanged += value; }
-            remove { propertyChanged -= value; }
-        }
         public static string PathWithAppFolder
         {
             get
@@ -59,7 +53,7 @@ namespace DuplicatesFinder_v4.ViewModels
             }
         }
 
-        public async void SaveToTxt()
+        public async void SaveToTxtAsync()
         {
             var dateCreation = DateTime.Now.ToShortDateString();
             var setFileSaveName = $"Dublicates_{dateCreation}.txt";
@@ -83,20 +77,20 @@ namespace DuplicatesFinder_v4.ViewModels
             }
         }
 
-        public async void DeleteCheckedItems()
+        public async void DeleteCheckedItemsAsync()
         {
-            deleteFromList();
-            await saveFilesToTempFolderAsync();
+            await saveFilesToTempFolder();
             await deleteFromFolder();
+            deleteFromList();
         }
 
-        public async void UndoDeleteCheckedItems()
+        public async void UndoDeleteCheckedItemsAsync()
         {
             recoveryToList();
             await recoveryToFolder();
         }
 
-        public Task DeleteTempFilesAsync()
+        public Task DeleteTempFiles()
         {
             if (Directory.Exists(pathTempFolder))
             {
@@ -117,7 +111,7 @@ namespace DuplicatesFinder_v4.ViewModels
                         foreach (var directory in directories)
                         {
                             pathTempFolder = directory;
-                            DeleteTempFilesAsync();
+                            DeleteTempFiles();
                         }
                     }
                     foreach (var dir in directoryInfo.GetDirectories())
@@ -131,14 +125,13 @@ namespace DuplicatesFinder_v4.ViewModels
             return Task.CompletedTask;
         }
 
-        private Task saveFilesToTempFolderAsync()
+        private Task saveFilesToTempFolder()
         {
             Task taskSaveToTempFolder = Task.Run(() =>
             {
                 var checkedUserItems = checkedFiles();
                 var index = 1;
                 var isBreak = false;
-                var pathTempFolder = Path.Combine(PathWithAppFolder, TEMPORARY_FOLDER_NAME);
                 if (!Directory.Exists(pathTempFolder))
                 {
                     Directory.CreateDirectory(pathTempFolder);

@@ -153,7 +153,7 @@ namespace DuplicatesFinder_v4.ViewModels
             {
                 return onClickExport ?? (onClickExport = new RelayCommand((r) =>
                 {
-                    Task.Run(() => DuplicatesViewModel.SaveToTxt());
+                    Task.Run(() => DuplicatesViewModel.SaveToTxtAsync());
                      
                     MessageBoxResult result = System.Windows.MessageBox.Show(
                         "Save was successful completed! \nOpen containing folder ? ",
@@ -177,7 +177,7 @@ namespace DuplicatesFinder_v4.ViewModels
                 return onClickSearch ?? (onClickSearch = new RelayCommand((r) =>
                 {
                     DuplicatesViewModel.CollectionForDuplicatesView.Clear();
-                    DuplicatesViewModel.DeleteTempFilesAsync();
+                    DuplicatesViewModel.DeleteTempFiles();
 
                     if (ispics == false && isdocs == false && isvideos == false)
                     {
@@ -222,7 +222,7 @@ namespace DuplicatesFinder_v4.ViewModels
             {
                 return onClickDelete ?? (onClickDelete = new RelayCommand((r) =>
                 {
-                   DuplicatesViewModel.DeleteCheckedItems();
+                   DuplicatesViewModel.DeleteCheckedItemsAsync();
                 }
                 ));
             }
@@ -234,7 +234,7 @@ namespace DuplicatesFinder_v4.ViewModels
             {
                 return onClickUndoDelete ?? (onClickUndoDelete = new RelayCommand((r) =>
                 {
-                    DuplicatesViewModel.UndoDeleteCheckedItems();
+                    DuplicatesViewModel.UndoDeleteCheckedItemsAsync();
                 }
                 ));
             }
