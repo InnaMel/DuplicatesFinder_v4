@@ -51,7 +51,7 @@ namespace DuplicatesFinder_v4.Models
 
                         for (int j = i; j < allFiles.Count; j++)
                         {
-                            if (allFiles[j].IsCheckedAsDuplicate == false && allFiles[i].FileName == allFiles[j].FileName)
+                            if (allFiles[j].IsCheckedAsDuplicate == false && allFiles[i].FileName.ToLower() == allFiles[j].FileName.ToLower())
                             {
                                 subsidiaryList.Add(allFiles[j]);
                                 allFiles[j].IsCheckedAsDuplicate = true;
@@ -70,7 +70,7 @@ namespace DuplicatesFinder_v4.Models
 
         private List<FileConsist> findAllFiles()
         {
-            List<string> allFiles = findFromDirectory();
+            List<string> allFiles = findAllFilesFromDirectory();
             List<FileConsist> listSplitedFiles = null;
 
             if (allFiles != null)
@@ -115,7 +115,7 @@ namespace DuplicatesFinder_v4.Models
             };
         }
 
-        private List<string> findFromDirectory()
+        private List<string> findAllFilesFromDirectory()
         {
             List<string> direct = null;
             List<string> files = null;
@@ -133,7 +133,7 @@ namespace DuplicatesFinder_v4.Models
                     foreach (var item in direct)
                     {
                         userPath = item;
-                        files = files.Concat(findFromDirectory()).ToList();
+                        files = files.Concat(findAllFilesFromDirectory()).ToList();
                     }
                 }
             }

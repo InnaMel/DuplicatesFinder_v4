@@ -214,6 +214,7 @@
                         Width="150"
                         Margin="0,10,10,7"
                         Background="White"
+                        Command="{Binding OnClickUndoDelete}"
                         Content="Undo Delete"
                         Style="{StaticResource borderCornerRadiusBlackStyle}" />
                 </StackPanel>
@@ -243,7 +244,7 @@
                         Margin="5,0"
                         VerticalAlignment="Top"
                         BorderThickness="0"
-                        Text="All deleted files you can find in recycle bin"
+                        Text="All last deleted files, you can recover"
                         TextAlignment="Left" />
                 </StackPanel>
                 <StackPanel
