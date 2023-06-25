@@ -177,7 +177,7 @@ namespace DuplicatesFinder_v4.ViewModels
                 return onClickSearch ?? (onClickSearch = new RelayCommand((r) =>
                 {
                     DuplicatesViewModel.CollectionForDuplicatesView.Clear();
-                    DuplicatesViewModel.DeleteTempFiles();
+                    DuplicatesViewModel.DeleteTempFilesAsync();
 
                     if (ispics == false && isdocs == false && isvideos == false)
                     {
