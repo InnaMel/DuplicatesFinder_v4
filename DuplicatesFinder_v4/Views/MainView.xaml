@@ -9,6 +9,7 @@
     Title="DuplicatesFinder"
     Width="800"
     Height="650"
+    Closed="Window_Closed"
     Loaded="Window_Loaded"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
@@ -177,7 +178,7 @@
         </Border>
 
 
-        <Grid Grid.Row="1" Margin="10,20,10,20">
+        <Grid Grid.Row="1" Margin="0,20,0,20">
             <Grid.RowDefinitions />
             <views:DuplicatesView Grid.ColumnSpan="2" DataContext="{Binding DuplicatesViewModel}" />
         </Grid>
@@ -244,13 +245,12 @@
                         Margin="5,0"
                         VerticalAlignment="Top"
                         BorderThickness="0"
-                        Text="All last deleted files, you can recover"
+                        Text="you can recover last deleted files"
                         TextAlignment="Left" />
                 </StackPanel>
                 <StackPanel
                     Grid.Row="1"
                     Grid.Column="1"
-                    Margin="10,0"
                     Orientation="Horizontal">
                     <Grid VerticalAlignment="Top">
                         <Path Style="{StaticResource CircleStyle}" />
@@ -265,7 +265,7 @@
                         Margin="5,0"
                         VerticalAlignment="Top"
                         BorderThickness="0"
-                        Text="It'll be saved at Downloads\DuplicatesFinder"
+                        Text="exported to Downloads\DuplicatesFinder"
                         TextAlignment="Left" />
                 </StackPanel>
             </Grid>
