@@ -125,7 +125,7 @@ namespace DuplicatesFinder_v4.ViewModels
                 }
             }
         }
-        
+
         public ICommand OnClickBrowse
         {
             get
@@ -153,23 +153,25 @@ namespace DuplicatesFinder_v4.ViewModels
             {
                 return onClickExport ?? (onClickExport = new RelayCommand((r) =>
                 {
-                    Task.Run(() => DuplicatesViewModel.SaveToTxtAsync());
-                     
-                    MessageBoxResult result = System.Windows.MessageBox.Show(
-                        "Save was successful completed! \nOpen containing folder ? ",
-                        "DuplicatesFinder",
-                        MessageBoxButton.YesNo,
-                        MessageBoxImage.Information);
-                   
-                    if (result == MessageBoxResult.Yes)
-                    {
-                        Process.Start(DuplicatesViewModel.PathWithAppFolder);
-                    }
+                    DuplicatesViewModel.SaveToTxtAsync(() =>
+                        {
+                            MessageBoxResult result = System.Windows.MessageBox.Show(
+                            "Save was successful completed! \nOpen containing folder ? ",
+                            "DuplicatesFinder",
+                            MessageBoxButton.YesNo,
+                            MessageBoxImage.Information);
+
+                            if (result == MessageBoxResult.Yes)
+                            {
+                                Process.Start(DuplicatesViewModel.PathWithAppFolder);
+                            }
+                        }
+                            );
                 }
                 ));
             }
         }
-       
+
         public ICommand OnClickSearch
         {
             get
@@ -201,17 +203,17 @@ namespace DuplicatesFinder_v4.ViewModels
                             });
                         });
 
-                    // RunOnMainThread(() =>
-                    //{ 
-                    //    DuplicatesViewModel.Divide(GetModel.FindDuplicatesAsync()); 
-                    //});
+                // RunOnMainThread(() =>
+                //{ 
+                //    DuplicatesViewModel.Divide(GetModel.FindDuplicatesAsync()); 
+                //});
 
-                    //Task.Run(() =>
-                    //{
-                    //    ObservableCollection<ObservableCollection<FileConsist>> findedDuplicates = GetModel.FindDuplicates();
-                    //    OnResult(findedDuplicates);
-                    //});
-                }
+                //Task.Run(() =>
+                //{
+                //    ObservableCollection<ObservableCollection<FileConsist>> findedDuplicates = GetModel.FindDuplicates();
+                //    OnResult(findedDuplicates);
+                //});
+            }
                 ));
             }
         }
@@ -222,7 +224,7 @@ namespace DuplicatesFinder_v4.ViewModels
             {
                 return onClickDelete ?? (onClickDelete = new RelayCommand((r) =>
                 {
-                   DuplicatesViewModel.DeleteCheckedItemsAsync();
+                    DuplicatesViewModel.DeleteCheckedItemsAsync();
                 }
                 ));
             }
