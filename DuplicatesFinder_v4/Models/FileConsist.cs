@@ -10,7 +10,7 @@ namespace DuplicatesFinder_v4.Models
 {
     public class FileConsist
     {
-        [JsonPropertyName ("File name")]
+        [JsonPropertyName ("FILE NAME")]
         public string FileName { get; set; }
 
         [JsonPropertyName("File path")]
@@ -37,6 +37,7 @@ namespace DuplicatesFinder_v4.Models
         public bool IsCheckedAsDuplicate = false;
 
         // for Binding to IsChecked in CheckBox
+        [JsonIgnore]
         public bool IsCheckedInView { get; set; }
 
         public FileConsist() {}

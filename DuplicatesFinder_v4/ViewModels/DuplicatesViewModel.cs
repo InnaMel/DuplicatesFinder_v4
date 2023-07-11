@@ -53,7 +53,7 @@ namespace DuplicatesFinder_v4.ViewModels
             }
         }
 
-        public async void SaveToTxtAsync(Action message)
+        public async Task SaveToTxtAsync(Action message)
         {
             var dateCreation = DateTime.Now.ToShortDateString();
             var setFileSaveName = $"Dublicates_{dateCreation}.txt";
@@ -90,21 +90,21 @@ namespace DuplicatesFinder_v4.ViewModels
             message.Invoke();
         }
 
-        public async void DeleteCheckedItemsAsync()
+        public async Task DeleteCheckedItemsAsync()
         {
             await saveFilesToTempFolder();
             deleteFromList();
             await deleteFromFolder();
         }
 
-        public async void UndoDeleteCheckedItemsAsync()
+        public async Task UndoDeleteCheckedItemsAsync()
         {
             recoveryToList();
             await recoveryToFolder();
             listTempFiles = new List<FileTempStorage>();
         }
 
-        public async void DeleteTempFilesAsync()
+        public async Task DeleteTempFilesAsync()
         {
             listTempFiles = new List<FileTempStorage>();
             await Task.Run(() => deleteTempFiles(pathTempFolder));
