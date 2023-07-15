@@ -3,7 +3,6 @@ using DuplicatesFinderV4.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -21,12 +20,16 @@ namespace DuplicatesFinder_v4.ViewModels
         {
             get
             {
-                var getCurrentNameUser = Environment.UserName;
-                pathWithAppFolder = Path.Combine($"C:\\Users\\{getCurrentNameUser}\\Downloads", "DuplicatesFinder");
-                Directory.CreateDirectory(pathWithAppFolder);
+                if (pathWithAppFolder == null)
+                {
+                    var getCurrentNameUser = Environment.UserName;
+                    pathWithAppFolder = Path.Combine($"C:\\Users\\{getCurrentNameUser}\\Downloads", "DuplicatesFinder");
+                    Directory.CreateDirectory(pathWithAppFolder);
+                }
                 return pathWithAppFolder;
             }
         }
+
         public ObservableCollection<ListForViewDuplicates> CollectionForDuplicatesView { get; set; }
 
         public DuplicatesViewModel()
@@ -65,7 +68,7 @@ namespace DuplicatesFinder_v4.ViewModels
                 File.Delete(setFilePath);
             }
 
-            var currentChecked = checkedFiles();
+            var currentChecked = CheckedFiles();
             using (FileStream exportFile = new FileStream(setFilePath, FileMode.OpenOrCreate))
             {
                 if (currentChecked.Count != 0)
@@ -92,25 +95,25 @@ namespace DuplicatesFinder_v4.ViewModels
 
         public async Task DeleteCheckedItemsAsync()
         {
-            await saveFilesToTempFolder();
-            deleteFromList();
-            await deleteFromFolder();
+            await SaveFilesToTempFolder();
+            DeleteFromList();
+            await DeleteFromFolder();
         }
 
         public async Task UndoDeleteCheckedItemsAsync()
         {
-            recoveryToList();
-            await recoveryToFolder();
+            RecoveryToList();
+            await RecoveryToFolder();
             listTempFiles = new List<FileTempStorage>();
         }
 
         public async Task DeleteTempFilesAsync()
         {
             listTempFiles = new List<FileTempStorage>();
-            await Task.Run(() => deleteTempFiles(pathTempFolder));
+            await Task.Run(() => DeleteTempFiles(pathTempFolder));
         }
 
-        private void deleteTempFiles(string currentPath)
+        private void DeleteTempFiles(string currentPath)
         {
             if (Directory.Exists(pathTempFolder))
             {
@@ -128,7 +131,7 @@ namespace DuplicatesFinder_v4.ViewModels
                     foreach (var directory in directories)
                     {
                         currentPath = directory;
-                        deleteTempFiles(currentPath);
+                        DeleteTempFiles(currentPath);
                     }
                 }
 
@@ -141,11 +144,11 @@ namespace DuplicatesFinder_v4.ViewModels
             }
         }
 
-        private Task saveFilesToTempFolder()
+        private Task SaveFilesToTempFolder()
         {
-            Task taskSaveToTempFolder = Task.Run(() =>
+            var taskSaveToTempFolder = Task.Run(() =>
             {
-                var checkedUserItems = checkedFiles();
+                var checkedUserItems = CheckedFiles();
                 var index = 1;
                 var isBreak = false;
                 if (!Directory.Exists(pathTempFolder))
@@ -169,7 +172,7 @@ namespace DuplicatesFinder_v4.ViewModels
                             var newfullPathNestedTempFile = Path.Combine(pathNestedTempFolder, checkedItem.FileName);
                             File.Copy(fullPathCurrentFile, newfullPathNestedTempFile);
 
-                            addTolistTempFiles(checkedItem, newfullPathNestedTempFile);
+                            AddTolistTempFiles(checkedItem, newfullPathNestedTempFile);
                             isBreak = true;
                             break;
                         }
@@ -178,7 +181,7 @@ namespace DuplicatesFinder_v4.ViewModels
                     {
                         var newfullPathTempFile = Path.Combine(pathTempFolder, checkedItem.FileName);
                         File.Copy(fullPathCurrentFile, newfullPathTempFile);
-                        addTolistTempFiles(checkedItem, newfullPathTempFile);
+                        AddTolistTempFiles(checkedItem, newfullPathTempFile);
                     }
                     index++;
                 });
@@ -186,7 +189,7 @@ namespace DuplicatesFinder_v4.ViewModels
             return taskSaveToTempFolder;
         }
 
-        private Task deleteFromFolder()
+        private Task DeleteFromFolder()
         {
             return Task.Run(() =>
             {
@@ -198,9 +201,9 @@ namespace DuplicatesFinder_v4.ViewModels
             });
         }
 
-        private void deleteFromList()
+        private void DeleteFromList()
         {
-            checkedFiles().ForEach(itemDeleted =>
+            CheckedFiles().ForEach(itemDeleted =>
             {
                 foreach (var duplicatesView in CollectionForDuplicatesView)
                 {
@@ -217,7 +220,7 @@ namespace DuplicatesFinder_v4.ViewModels
             });
         }
 
-        private Task recoveryToFolder()
+        private Task RecoveryToFolder()
         {
             return Task.Run(() =>
             {
@@ -226,11 +229,11 @@ namespace DuplicatesFinder_v4.ViewModels
                     var currentPathFile = Path.Combine(deletedFile.FilePath, deletedFile.FileName);
                     File.Copy(deletedFile.TempPath, currentPathFile);
                 });
-                deleteTempFiles(pathTempFolder);
+                DeleteTempFiles(pathTempFolder);
             });
         }
 
-        private void recoveryToList()
+        private void RecoveryToList()
         {
             listTempFiles.ForEach(checkedFile =>
             {
@@ -265,7 +268,7 @@ namespace DuplicatesFinder_v4.ViewModels
             });
         }
 
-        private List<FileConsist> checkedFiles()
+        private List<FileConsist> CheckedFiles()
         {
             return CollectionForDuplicatesView
                 .SelectMany(item => item.FullInfoFiles)
@@ -273,7 +276,7 @@ namespace DuplicatesFinder_v4.ViewModels
                 .ToList();
         }
 
-        private void addTolistTempFiles(FileConsist fileConsist, string tempPath)
+        private void AddTolistTempFiles(FileConsist fileConsist, string tempPath)
         {
             var currentTempFile = new FileTempStorage(fileConsist, tempPath);
             listTempFiles.Add(currentTempFile);

@@ -2,7 +2,6 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
@@ -49,6 +48,7 @@ namespace DuplicatesFinder_v4.ViewModels
 
     public class MainViewModel : INotifyPropertyChanged
     {
+        private const string TextSuccessfulCompleted = "Save was successful completed! \nOpen containing folder ? ";
         private bool? ispics;
         private bool? isdocs;
         private bool? isvideos;
@@ -61,7 +61,6 @@ namespace DuplicatesFinder_v4.ViewModels
         private ICommand onClickUndoDelete;
 
         private event PropertyChangedEventHandler propertyChanged;
-
         public event PropertyChangedEventHandler PropertyChanged
         {
             add { propertyChanged += value; }
@@ -155,18 +154,20 @@ namespace DuplicatesFinder_v4.ViewModels
                 {
                     DuplicatesViewModel.SaveToTxtAsync(() =>
                         {
-                            MessageBoxResult result = System.Windows.MessageBox.Show(
-                            "Save was successful completed! \nOpen containing folder ? ",
-                            "DuplicatesFinder",
-                            MessageBoxButton.YesNo,
-                            MessageBoxImage.Information);
-
-                            if (result == MessageBoxResult.Yes)
+                            RunOnMainThread(() =>
                             {
-                                Process.Start(DuplicatesViewModel.PathWithAppFolder);
-                            }
-                        }
-                            );
+                                MessageBoxResult result = System.Windows.MessageBox.Show(
+                                    TextSuccessfulCompleted,
+                                    "DuplicatesFinder",
+                                    MessageBoxButton.YesNo,
+                                    MessageBoxImage.Information);
+
+                                if (result == MessageBoxResult.Yes)
+                                {
+                                    Process.Start(DuplicatesViewModel.PathWithAppFolder);
+                                }
+                            });
+                        });
                 }
                 ));
             }
@@ -202,18 +203,7 @@ namespace DuplicatesFinder_v4.ViewModels
                                 DuplicatesViewModel.Divide(list);
                             });
                         });
-
-                // RunOnMainThread(() =>
-                //{ 
-                //    DuplicatesViewModel.Divide(GetModel.FindDuplicatesAsync()); 
-                //});
-
-                //Task.Run(() =>
-                //{
-                //    ObservableCollection<ObservableCollection<FileConsist>> findedDuplicates = GetModel.FindDuplicates();
-                //    OnResult(findedDuplicates);
-                //});
-            }
+                }
                 ));
             }
         }
@@ -252,16 +242,5 @@ namespace DuplicatesFinder_v4.ViewModels
         {
             System.Windows.Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, action);
         }
-
-        //private void OnResult(ObservableCollection<ObservableCollection<FileConsist>> list)
-        //{
-        //    RunOnMainThread(() =>
-        //        {
-        //            if (list.Count == 0)
-        //                MessageBox.Show("No one matches");
-
-        //            DuplicatesViewModel.Divide(list);
-        //        });
-        //}
     }
 }

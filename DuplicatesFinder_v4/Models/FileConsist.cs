@@ -1,38 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace DuplicatesFinder_v4.Models
 {
     public class FileConsist
     {
-        [JsonPropertyName ("FILE NAME")]
+        [JsonPropertyName("FILE NAME")]
         public string FileName { get; set; }
 
         [JsonPropertyName("File path")]
         public string FilePath { get; set; }
-        
+
         [JsonIgnore]
         public string FileExtension { get; set; }
-        
+
         [JsonPropertyName("File size, kb")]
         public double FileSize { get; set; }
-        
+
         [JsonIgnore]
         public DateTime DateTimeCreate { get; set; }
-        
+
         [JsonPropertyName("File created")]
         public string DateTimeCreateString { get; set; }
-        
+
         [JsonIgnore]
         public DateTime DateTimeModified { get; set; }
 
         [JsonPropertyName("Last time modified")]
-        public string DateTimeModifiedString{ get; set; }
+        public string DateTimeModifiedString { get; set; }
 
         public bool IsCheckedAsDuplicate = false;
 
@@ -40,7 +36,7 @@ namespace DuplicatesFinder_v4.Models
         [JsonIgnore]
         public bool IsCheckedInView { get; set; }
 
-        public FileConsist() {}
+        public FileConsist() { }
         public FileConsist(FileInfo fullInfoFile)
         {
             this.FileName = fullInfoFile.Name;
