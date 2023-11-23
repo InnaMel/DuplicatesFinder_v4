@@ -160,10 +160,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="DnbF_Icon2_48.ico" />
+    <Resource Include="DnbF_Icon2_48.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="DnbF_Icon2_256.ico" />
+    <Resource Include="DnbF_Icon2_256.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\DnbF_Icon2_256.ico" />

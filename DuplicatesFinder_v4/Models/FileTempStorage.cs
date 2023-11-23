@@ -1,9 +1,4 @@
 ﻿using DuplicatesFinder_v4.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DuplicatesFinderV4.Models
 {

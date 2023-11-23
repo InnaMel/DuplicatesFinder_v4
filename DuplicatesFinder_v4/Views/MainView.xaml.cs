@@ -21,17 +21,24 @@ namespace DuplicatesFinder_v4.Views
     /// </summary>
     public partial class MainView : Window
     {
+        private MainViewModel mainViewModel;
         private bool isClean = false;
 
         public MainView()
         {
             InitializeComponent();
+            mainViewModel = new MainViewModel();
         }
 
         private void Window_Loaded(object j, RoutedEventArgs e)
         {
-            DataContext = new MainViewModel();
+            DataContext = mainViewModel;
             pathFromUser.Focus();
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            mainViewModel.DuplicatesViewModel.DeleteTempFilesAsync();
         }
 
         private void Enter_KeyDown(object sender, KeyEventArgs e)
