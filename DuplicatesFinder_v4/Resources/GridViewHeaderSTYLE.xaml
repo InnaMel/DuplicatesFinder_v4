@@ -13,7 +13,7 @@
                     <Border
                         x:Name="borderGray"
                         BorderBrush="Gray"
-                        BorderThickness="0,1,0,1">
+                        BorderThickness="0,0,0,1">
                         <StackPanel Orientation="Horizontal">
                             <Rectangle
                                 Width="1"
@@ -22,7 +22,7 @@
                                 Fill="Gray" />
                             <TextBlock
                                 Width="{TemplateBinding Width}"
-                                Padding="5,5,5,0"
+                                Padding="5,0,5,0"
                                 VerticalAlignment="Center"
                                 Text="{TemplateBinding Content}"
                                 TextAlignment="Left" />
