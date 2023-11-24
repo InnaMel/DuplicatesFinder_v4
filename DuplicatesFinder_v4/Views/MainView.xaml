@@ -14,7 +14,7 @@
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
 
-    <Grid Margin="10,10,10,0">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="130" />
             <RowDefinition />
@@ -178,8 +178,7 @@
         </Border>
 
 
-        <Grid Grid.Row="1" Margin="0,20,0,20">
-            <Grid.RowDefinitions />
+        <Grid Grid.Row="1" Margin="10,10,10,0">
             <views:DuplicatesView Grid.ColumnSpan="2" DataContext="{Binding DuplicatesViewModel}" />
         </Grid>
 
