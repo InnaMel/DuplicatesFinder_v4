@@ -10,7 +10,7 @@
         <ListBox BorderThickness="0" ItemsSource="{Binding CollectionForDuplicatesView}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Border Margin="0,2,0,20">
+                    <Border Margin="0,0,0,5">
                         <ListView
                             Name="WholeList"
                             BorderThickness="1"
@@ -24,7 +24,7 @@
                             <ListView.View>
                                 <GridView ColumnHeaderContainerStyle="{StaticResource GridViewHeaderStyle}">
                                     <GridViewColumn
-                                        Width="{Binding RelativeSource={RelativeSource Self}, Path=PlacementTarget.ActualWidth}"
+                                        Width="420"
                                         Header="{Binding NameDuplicates}"
                                         HeaderContainerStyle="{StaticResource HeadRedGridView}">
 
@@ -40,7 +40,7 @@
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
 
-                                    <GridViewColumn Width="70" DisplayMemberBinding="{Binding FileExtension}">Type</GridViewColumn>
+                                    <GridViewColumn Width="50" DisplayMemberBinding="{Binding FileExtension}">Type</GridViewColumn>
                                     <GridViewColumn Width="{Binding RelativeSource={RelativeSource Self}, Path=PlacementTarget.ActualWidth}" DisplayMemberBinding="{Binding FileSize}">Size, kb</GridViewColumn>
                                     <GridViewColumn Width="100" DisplayMemberBinding="{Binding DateTimeCreateString}">Creation Date</GridViewColumn>
                                     <GridViewColumn Width="100" DisplayMemberBinding="{Binding DateTimeModifiedString}">Modified Date</GridViewColumn>
