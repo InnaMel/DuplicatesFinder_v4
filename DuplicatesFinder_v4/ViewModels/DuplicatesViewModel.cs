@@ -1,12 +1,15 @@
 ﻿using DuplicatesFinder_v4.Models;
+using DuplicatesFinderV4;
 using DuplicatesFinderV4.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace DuplicatesFinder_v4.ViewModels
 {
@@ -48,7 +51,7 @@ namespace DuplicatesFinder_v4.ViewModels
                     var eachDuplicatesForView = new ListForViewDuplicates();
 
                     eachDuplicatesForView.NameDuplicates = collectionFileConsist[0].FileName.ToUpper();
-
+                    eachDuplicatesForView.Ico = GetImageSourceIcon(collectionFileConsist[0].FilePath, collectionFileConsist[0].FileName);
                     eachDuplicatesForView.FullInfoFiles = collectionFileConsist;
 
                     CollectionForDuplicatesView.Add(eachDuplicatesForView);
@@ -280,6 +283,15 @@ namespace DuplicatesFinder_v4.ViewModels
         {
             var currentTempFile = new FileTempStorage(fileConsist, tempPath);
             listTempFiles.Add(currentTempFile);
+        }
+
+        private Bitmap GetImageSourceIcon (string filePath, string fileName)
+        {
+            string fulPath = Path.Combine(filePath, fileName);
+            Icon ico = System.Drawing.Icon.ExtractAssociatedIcon(fulPath);
+
+            //return ImageSourceExtension.ToImageSource(ico);
+            return ico.ToBitmap();
         }
 
     }

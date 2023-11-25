@@ -40,6 +40,7 @@
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
 
+                                    <GridViewColumn Width="20" DisplayMemberBinding="{Binding Ico}">x</GridViewColumn>
                                     <GridViewColumn Width="50" DisplayMemberBinding="{Binding FileExtension}">Type</GridViewColumn>
                                     <GridViewColumn Width="{Binding RelativeSource={RelativeSource Self}, Path=PlacementTarget.ActualWidth}" DisplayMemberBinding="{Binding FileSize}">Size, kb</GridViewColumn>
                                     <GridViewColumn Width="100" DisplayMemberBinding="{Binding DateTimeCreateString}">Creation Date</GridViewColumn>
