@@ -6,6 +6,9 @@
     xmlns:local="clr-namespace:DuplicatesFinder_v4.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <local:ImageConverter x:Key="IconConverter" />
+    </UserControl.Resources>
     <Grid x:Name="MainGrid">
         <ListBox BorderThickness="0" ItemsSource="{Binding CollectionForDuplicatesView}">
             <ListBox.ItemTemplate>
@@ -40,7 +43,7 @@
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
 
-                                    <GridViewColumn Width="20" DisplayMemberBinding="{Binding Ico}">x</GridViewColumn>
+                                    <GridViewColumn Width="20" DisplayMemberBinding="{Binding Ico, Converter={StaticResource IconConverter}}">x</GridViewColumn>
                                     <GridViewColumn Width="50" DisplayMemberBinding="{Binding FileExtension}">Type</GridViewColumn>
                                     <GridViewColumn Width="{Binding RelativeSource={RelativeSource Self}, Path=PlacementTarget.ActualWidth}" DisplayMemberBinding="{Binding FileSize}">Size, kb</GridViewColumn>
                                     <GridViewColumn Width="100" DisplayMemberBinding="{Binding DateTimeCreateString}">Creation Date</GridViewColumn>
