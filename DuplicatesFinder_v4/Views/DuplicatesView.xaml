@@ -42,10 +42,18 @@
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-
-                                    <GridViewColumn Width="20" DisplayMemberBinding="{Binding Ico, Converter={StaticResource IconConverter}}">x</GridViewColumn>
+                                    <GridViewColumn Width="20">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Image
+                                                    Width="12"
+                                                    Height="12"
+                                                    Source="{Binding Path=Ico, Converter={StaticResource IconConverter}}" />
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
                                     <GridViewColumn Width="50" DisplayMemberBinding="{Binding FileExtension}">Type</GridViewColumn>
-                                    <GridViewColumn Width="{Binding RelativeSource={RelativeSource Self}, Path=PlacementTarget.ActualWidth}" DisplayMemberBinding="{Binding FileSize}">Size, kb</GridViewColumn>
+                                    <GridViewColumn DisplayMemberBinding="{Binding FileSize}">Size, kb</GridViewColumn>
                                     <GridViewColumn Width="100" DisplayMemberBinding="{Binding DateTimeCreateString}">Creation Date</GridViewColumn>
                                     <GridViewColumn Width="100" DisplayMemberBinding="{Binding DateTimeModifiedString}">Modified Date</GridViewColumn>
                                 </GridView>

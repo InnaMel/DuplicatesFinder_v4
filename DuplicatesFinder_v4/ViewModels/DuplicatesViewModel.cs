@@ -51,7 +51,7 @@ namespace DuplicatesFinder_v4.ViewModels
                     var eachDuplicatesForView = new ListForViewDuplicates();
 
                     eachDuplicatesForView.NameDuplicates = collectionFileConsist[0].FileName.ToUpper();
-                    eachDuplicatesForView.Ico = GetImageSourceIcon(collectionFileConsist[0].FilePath, collectionFileConsist[0].FileName);
+                    eachDuplicatesForView.Ico = GetIconsBitmap(collectionFileConsist[0].FilePath, collectionFileConsist[0].FileName);
                     eachDuplicatesForView.FullInfoFiles = collectionFileConsist;
 
                     CollectionForDuplicatesView.Add(eachDuplicatesForView);
@@ -285,10 +285,10 @@ namespace DuplicatesFinder_v4.ViewModels
             listTempFiles.Add(currentTempFile);
         }
 
-        private Bitmap GetImageSourceIcon (string filePath, string fileName)
+        private Bitmap GetIconsBitmap (string filePath, string fileName)
         {
             string fulPath = Path.Combine(filePath, fileName);
-            Icon ico = System.Drawing.Icon.ExtractAssociatedIcon(fulPath);
+            Icon ico = Icon.ExtractAssociatedIcon(fulPath);
 
             //return ImageSourceExtension.ToImageSource(ico);
             return ico.ToBitmap();
