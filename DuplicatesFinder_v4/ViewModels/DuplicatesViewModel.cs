@@ -285,13 +285,13 @@ namespace DuplicatesFinder_v4.ViewModels
             listTempFiles.Add(currentTempFile);
         }
 
-        private Bitmap GetIconsBitmap (string filePath, string fileName)
+        private ImageSource GetIconsBitmap (string filePath, string fileName)
         {
             string fulPath = Path.Combine(filePath, fileName);
             Icon ico = Icon.ExtractAssociatedIcon(fulPath);
 
-            //return ImageSourceExtension.ToImageSource(ico);
-            return ico.ToBitmap();
+            return ImageSourceExtension.ToImageSource(ico);
+            //return ico.ToBitmap();
         }
 
     }

@@ -9,7 +9,7 @@ namespace DuplicatesFinder_v4.ViewModels
     public class ListForViewDuplicates
     {
         public string NameDuplicates { get; set; }
-        public Bitmap Ico { get; set; }
+        public ImageSource Ico { get; set; }
         public ObservableCollection<FileConsist> FullInfoFiles { get; set; }
 
         public ListForViewDuplicates()
