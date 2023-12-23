@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="clr-namespace:DuplicatesFinder_v4.Views"
     Title="DuplicatesFinder"
-    Width="800"
+    Width="830"
     Height="650"
     Closed="Window_Closed"
     Loaded="Window_Loaded"

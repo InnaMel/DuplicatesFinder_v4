@@ -17,7 +17,7 @@
                         <ListView
                             Name="WholeList"
                             BorderThickness="1"
-                            ItemsSource="{Binding FullInfoFiles}"
+                            ItemsSource="{Binding Path=FullInfoFiles}"
                             SelectionMode="Multiple">
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
@@ -26,11 +26,11 @@
                             </ListView.ItemContainerStyle>
                             <ListView.View>
                                 <GridView ColumnHeaderContainerStyle="{StaticResource GridViewHeaderStyle}">
+
                                     <GridViewColumn
                                         Width="420"
                                         Header="{Binding NameDuplicates}"
                                         HeaderContainerStyle="{StaticResource HeadRedGridView}">
-
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <CheckBox
@@ -42,16 +42,18 @@
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-                                    <GridViewColumn Width="20">
+
+                                    <GridViewColumn Width="30">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <Image
-                                                    Width="12"
-                                                    Height="12"
+                                                    Width="16"
+                                                    Height="16"
                                                     Source="{Binding Path=Ico, Converter={StaticResource IconConverter}}" />
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
+
                                     <GridViewColumn Width="50" DisplayMemberBinding="{Binding FileExtension}">Type</GridViewColumn>
                                     <GridViewColumn DisplayMemberBinding="{Binding FileSize}">Size, kb</GridViewColumn>
                                     <GridViewColumn Width="100" DisplayMemberBinding="{Binding DateTimeCreateString}">Creation Date</GridViewColumn>
