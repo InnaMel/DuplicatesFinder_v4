@@ -13,15 +13,17 @@ namespace DuplicatesFinder_v4.Views
         {
             if (value is Bitmap)
             {
-                var stream = new MemoryStream();
-                ((Bitmap)value).Save(stream, ImageFormat.Png);
+                using (var stream = new MemoryStream())
+                {
+                    ((Bitmap)value).Save(stream, ImageFormat.Png);
 
-                BitmapImage bitmap = new BitmapImage();
-                bitmap.BeginInit();
-                bitmap.StreamSource = stream;
-                bitmap.EndInit();
+                    BitmapImage bitmap = new BitmapImage();
+                    bitmap.BeginInit();
+                    bitmap.StreamSource = stream;
+                    bitmap.EndInit();
 
-                return bitmap;
+                    return bitmap;
+                }
             }
             return value;
         }
