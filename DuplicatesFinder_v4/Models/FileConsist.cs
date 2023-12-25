@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Text.Json.Serialization;
+using System.Windows.Media;
 
 namespace DuplicatesFinder_v4.Models
 {
@@ -35,6 +37,8 @@ namespace DuplicatesFinder_v4.Models
         // for Binding to IsChecked in CheckBox
         [JsonIgnore]
         public bool IsCheckedInView { get; set; }
+        [JsonIgnore]
+        public Bitmap Ico { get; set; }
 
         public FileConsist() { }
         public FileConsist(FileInfo fullInfoFile)
@@ -47,6 +51,7 @@ namespace DuplicatesFinder_v4.Models
             this.DateTimeCreateString = fullInfoFile.CreationTime.ToString("g");
             this.DateTimeModified = File.GetLastWriteTime(fullInfoFile.FullName);
             this.DateTimeModifiedString = DateTimeModified.ToString("g");
+            Ico = GetIconsBitmap(fullInfoFile.FullName); 
         }
 
         public override string ToString()
@@ -71,5 +76,11 @@ namespace DuplicatesFinder_v4.Models
             else return false;
         }
 
+        private Bitmap GetIconsBitmap(string filePath)
+        {
+            Icon ico = Icon.ExtractAssociatedIcon(filePath);
+
+            return ico.ToBitmap();
+        }
     }
 }

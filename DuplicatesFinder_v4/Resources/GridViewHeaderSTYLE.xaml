@@ -17,7 +17,6 @@
                         <StackPanel Orientation="Horizontal">
                             <Rectangle
                                 Width="1"
-                                Height="{Binding ElementName=borderGray}"
                                 Margin="0,3,0,3"
                                 Fill="Gray" />
                             <TextBlock

@@ -6,6 +6,9 @@
     xmlns:local="clr-namespace:DuplicatesFinder_v4.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <local:ImageConverter x:Key="IconConverter" />
+    </UserControl.Resources>
     <Grid x:Name="MainGrid">
         <ListBox BorderThickness="0" ItemsSource="{Binding CollectionForDuplicatesView}">
             <ListBox.ItemTemplate>
@@ -14,7 +17,7 @@
                         <ListView
                             Name="WholeList"
                             BorderThickness="1"
-                            ItemsSource="{Binding FullInfoFiles}"
+                            ItemsSource="{Binding Path=FullInfoFiles}"
                             SelectionMode="Multiple">
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
@@ -23,11 +26,11 @@
                             </ListView.ItemContainerStyle>
                             <ListView.View>
                                 <GridView ColumnHeaderContainerStyle="{StaticResource GridViewHeaderStyle}">
+
                                     <GridViewColumn
                                         Width="420"
                                         Header="{Binding NameDuplicates}"
                                         HeaderContainerStyle="{StaticResource HeadRedGridView}">
-
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <CheckBox
@@ -40,8 +43,19 @@
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
 
+                                    <GridViewColumn Width="30">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Image
+                                                    Width="16"
+                                                    Height="16"
+                                                    Source="{Binding Path=Ico, Converter={StaticResource IconConverter}}" />
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+
                                     <GridViewColumn Width="50" DisplayMemberBinding="{Binding FileExtension}">Type</GridViewColumn>
-                                    <GridViewColumn Width="{Binding RelativeSource={RelativeSource Self}, Path=PlacementTarget.ActualWidth}" DisplayMemberBinding="{Binding FileSize}">Size, kb</GridViewColumn>
+                                    <GridViewColumn DisplayMemberBinding="{Binding FileSize}">Size, kb</GridViewColumn>
                                     <GridViewColumn Width="100" DisplayMemberBinding="{Binding DateTimeCreateString}">Creation Date</GridViewColumn>
                                     <GridViewColumn Width="100" DisplayMemberBinding="{Binding DateTimeModifiedString}">Modified Date</GridViewColumn>
                                 </GridView>

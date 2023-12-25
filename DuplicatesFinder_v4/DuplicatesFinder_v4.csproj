@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{3AD4142B-510D-4F65-B025-673BEAFD3630}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>DuplicatesFinderV4</RootNamespace>
+    <RootNamespace>DuplicatesFinder_v4</RootNamespace>
     <AssemblyName>DuplicatesFinder</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -48,6 +48,7 @@
       <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
     </Reference>
@@ -117,6 +118,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ImageSourceExtension.cs" />
     <Compile Include="Models\FileConsist.cs" />
     <Compile Include="Models\FileTempStorage.cs" />
     <Compile Include="Models\Model.cs" />
@@ -127,6 +129,7 @@
     <Compile Include="Views\DuplicatesView.xaml.cs">
       <DependentUpon>DuplicatesView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ImageConverter.cs" />
     <Compile Include="Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
       <SubType>Code</SubType>
